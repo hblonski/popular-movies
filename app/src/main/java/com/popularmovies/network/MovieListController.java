@@ -15,6 +15,8 @@ import retrofit2.Retrofit;
 
 public class MovieListController implements Callback<MovieApi.Page> {
 
+    private static final String API_KEY = "";
+
     private MutableLiveData<List<Movie>> moviesList;
 
     private MovieApi movieApi;
@@ -25,14 +27,14 @@ public class MovieListController implements Callback<MovieApi.Page> {
         moviesList = new MutableLiveData<>();
     }
 
-    public void fetchMovieList(MovieListSortOrder sortOrder, Integer page, String apiKey) {
+    public void fetchMovieList(MovieListSortOrder sortOrder, Integer page) {
         Call<MovieApi.Page> call;
         switch (sortOrder) {
             case POPULAR:
-                call = movieApi.getPopularMovies(page, apiKey);
+                call = movieApi.getPopularMovies(page, API_KEY);
                 break;
             case TOP_RATED:
-                call = movieApi.getTopRatedMovies(page, apiKey);
+                call = movieApi.getTopRatedMovies(page, API_KEY);
                 break;
             default:
                 throw new InvalidParameterException("Invalid sort order.");
