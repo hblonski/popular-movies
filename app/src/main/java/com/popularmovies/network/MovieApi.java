@@ -9,19 +9,27 @@ import retrofit2.Call;
 import retrofit2.http.GET;
 import retrofit2.http.Query;
 
+/**
+ * Used to send requests to The Movie DB API (https://api.themoviedb.org).
+ * See https://square.github.io/retrofit/
+ * */
 public interface MovieApi {
 
-    String BASE_URL = "https://api.themoviedb.org/3";
+    String BASE_URL = "https://api.themoviedb.org/3/";
 
-    String BASE_URL_IMAGES = "https://image.tmdb.org/t/p/w342";
+    String BASE_URL_IMAGES = "https://image.tmdb.org/t/p/w780";
 
-    @GET("/movie/popular")
+    @GET("movie/popular")
     Call<Page> getPopularMovies(@Query("page") Integer page, @Query("api_key") String apiKey);
 
-    @GET("/movie/top_rated")
+    @GET("movie/top_rated")
     Call<Page> getTopRatedMovies(@Query("page") Integer page, @Query("api_key") String apiKey);
 
     class Page {
+
+        //Page size according to themoviedb.org
+        //See https://www.themoviedb.org/talk/522eeae419c2955e90252e23?language=en-US
+        public static final int SIZE = 20;
 
         @JsonProperty("page")
         private Integer page;
@@ -30,7 +38,7 @@ public interface MovieApi {
         private Integer totalResults;
 
         @JsonProperty("total_pages")
-        private Integer totalpages;
+        private Integer totalPages;
 
         @JsonProperty("results")
         private List<Movie> results;
@@ -51,12 +59,12 @@ public interface MovieApi {
             this.totalResults = totalResults;
         }
 
-        public Integer getTotalpages() {
-            return totalpages;
+        public Integer getTotalPages() {
+            return totalPages;
         }
 
-        public void setTotalpages(Integer totalpages) {
-            this.totalpages = totalpages;
+        public void setTotalPages(Integer totalPages) {
+            this.totalPages = totalPages;
         }
 
         public List<Movie> getResults() {

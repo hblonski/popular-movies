@@ -18,12 +18,6 @@ public class MovieListAdapter extends RecyclerView.Adapter<MovieListAdapter.Movi
 
     private List<Movie> movieList;
 
-    private MovieController movieController;
-
-    public MovieListAdapter() {
-        movieController = new MovieController();
-    }
-
     @NonNull
     @Override
     public MovieViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
@@ -34,7 +28,7 @@ public class MovieListAdapter extends RecyclerView.Adapter<MovieListAdapter.Movi
     @Override
     public void onBindViewHolder(@NonNull MovieViewHolder holder, int position) {
         String moviePosterPath = movieList.get(position).getPosterPath();
-        movieController.loadMoviePoster(holder.imageViewPoster, moviePosterPath);
+        MovieController.loadMoviePoster(holder.imageViewPoster, moviePosterPath);
     }
 
     @Override
@@ -52,11 +46,8 @@ public class MovieListAdapter extends RecyclerView.Adapter<MovieListAdapter.Movi
         }
     }
 
-    public List<Movie> getMovieList() {
-        return this.movieList;
-    }
-
     public void setMovieList(List<Movie> movieList) {
         this.movieList = movieList;
+        notifyDataSetChanged();
     }
 }
