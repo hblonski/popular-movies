@@ -13,6 +13,8 @@ public interface MovieApi {
 
     String BASE_URL = "https://api.themoviedb.org/3";
 
+    String BASE_URL_IMAGES = "https://image.tmdb.org/t/p/w342";
+
     @GET("/movie/popular")
     Call<Page> getPopularMovies(@Query("page") Integer page, @Query("api_key") String apiKey);
 

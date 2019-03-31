@@ -1,8 +1,10 @@
 package com.popularmovies.network;
 
 import android.arch.lifecycle.MutableLiveData;
+import android.widget.ImageView;
 
 import com.popularmovies.model.Movie;
+import com.squareup.picasso.Picasso;
 
 import java.security.InvalidParameterException;
 import java.util.Collections;
@@ -13,7 +15,7 @@ import retrofit2.Callback;
 import retrofit2.Response;
 import retrofit2.Retrofit;
 
-public class MovieListController implements Callback<MovieApi.Page> {
+public class MovieController implements Callback<MovieApi.Page> {
 
     private static final String API_KEY = "";
 
@@ -21,7 +23,7 @@ public class MovieListController implements Callback<MovieApi.Page> {
 
     private MovieApi movieApi;
 
-    public MovieListController() {
+    public MovieController() {
         Retrofit retrofitInstance = RetrofitUtil.getRetrofitInstance(MovieApi.BASE_URL);
         movieApi = retrofitInstance.create(MovieApi.class);
         moviesList = new MutableLiveData<>();
@@ -40,6 +42,14 @@ public class MovieListController implements Callback<MovieApi.Page> {
                 throw new InvalidParameterException("Invalid sort order.");
         }
         call.enqueue(this);
+    }
+
+    public void loadMoviePoster(ImageView imageView, String posterPath) {
+        Picasso.get().load(buildPorterURL(posterPath)).into(imageView);
+    }
+
+    private String buildPorterURL(String posterPath) {
+        return MovieApi.BASE_URL_IMAGES.concat(posterPath);
     }
 
     @Override
