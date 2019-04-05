@@ -33,6 +33,8 @@ public class MainActivity extends AppCompatActivity {
 
     private MovieController movieController;
 
+    private MovieListSortOrder currentSortOrder;
+
     RecyclerView moviesListRecyclerView;
 
     @Override
@@ -57,7 +59,6 @@ public class MainActivity extends AppCompatActivity {
         handleScreenRotationOnRecyclerView();
 
         observeDataChange(movieListAdapter);
-        movieController.fetchMovieList(MovieListSortOrder.TOP_RATED, 1);
     }
 
     private void observeDataChange(final MovieListAdapter movieListAdapter) {
@@ -87,16 +88,26 @@ public class MainActivity extends AppCompatActivity {
         adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         spinner.setAdapter(adapter);
 
-        //Changes the selected item text color
         spinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-                ((TextView) parent.getChildAt(0)).setTextColor(Color.WHITE);
+                TextView selectedItem = (TextView) parent.getChildAt(0);
+                selectedItem.setTextColor(Color.WHITE);
+
+                String selectedItemLabel = selectedItem.getText().toString();
+                if (selectedItemLabel.equals(getResources().getString(R.string.popular))) {
+                    currentSortOrder = MovieListSortOrder.POPULAR;
+                    movieController.fetchMovieList(currentSortOrder, 1);
+                } else {
+                    currentSortOrder = MovieListSortOrder.TOP_RATED;
+                    movieController.fetchMovieList(currentSortOrder, 1);
+                }
             }
 
             @Override
             public void onNothingSelected(AdapterView<?> parent) {}
         });
+
         return true;
     }
 
