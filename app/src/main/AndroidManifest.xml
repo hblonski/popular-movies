@@ -22,10 +22,6 @@
         </activity>
     </application>
 
-    <uses-sdk
-        android:minSdkVersion="24"
-        android:targetSdkVersion="28" />
-
     <!--Permissions-->
     <uses-permission android:name="android.permission.INTERNET" />
 </manifest>

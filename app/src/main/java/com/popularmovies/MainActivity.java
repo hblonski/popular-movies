@@ -4,8 +4,11 @@ import android.arch.lifecycle.Observer;
 import android.arch.lifecycle.ViewModelProviders;
 import android.content.res.Configuration;
 import android.graphics.Color;
+import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -25,7 +28,7 @@ import com.popularmovies.network.MovieListSortOrder;
 
 import java.util.List;
 
-public class MainActivity extends AppCompatActivity {
+public class MainActivity extends AppCompatActivity implements MovieDetailsFragment.OnFragmentInteractionListener {
 
     private final static int NUMBER_OF_COLUMNS_VERTICAL = 2;
 
@@ -45,7 +48,7 @@ public class MainActivity extends AppCompatActivity {
         movieController = ViewModelProviders.of(this).get(MovieController.class);
 
         moviesListRecyclerView = findViewById(R.id.movies_recycler_view);
-        final MovieListAdapter movieListAdapter = new MovieListAdapter();
+        final MovieListAdapter movieListAdapter = new MovieListAdapter(this);
         moviesListRecyclerView.setAdapter(movieListAdapter);
 
         //Set fixed size for the RecyclerView items, since they'll always contain images of same size
@@ -117,5 +120,22 @@ public class MainActivity extends AppCompatActivity {
         } else {
             moviesListRecyclerView.setLayoutManager(new GridLayoutManager(this, NUMBER_OF_COLUMNS_HORIZONTAL));
         }
+    }
+
+    @Override
+    public void onFragmentInteraction(Uri uri) {
+        //Empty
+    }
+
+    /**
+     * Creates a {@link Fragment} on top of the activity.
+     * @param fragment the {@link Fragment}
+     * */
+    public void createFragment(Fragment fragment) {
+        FragmentTransaction fragmentTransaction = getSupportFragmentManager().beginTransaction();
+        fragmentTransaction.replace(R.id.activity_main_frameLayout, fragment);
+        //Necessary so that the user can navigate back
+        fragmentTransaction.addToBackStack(null);
+        fragmentTransaction.commit();
     }
 }

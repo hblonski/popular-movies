@@ -1,5 +1,6 @@
 package com.popularmovies.adapter;
 
+import android.content.Context;
 import android.support.annotation.NonNull;
 import android.support.v7.widget.CardView;
 import android.support.v7.widget.RecyclerView;
@@ -8,6 +9,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 
+import com.popularmovies.MainActivity;
 import com.popularmovies.R;
 import com.popularmovies.model.Movie;
 import com.popularmovies.network.MovieController;
@@ -17,6 +19,12 @@ import java.util.List;
 public class MovieListAdapter extends RecyclerView.Adapter<MovieListAdapter.MovieViewHolder> {
 
     private List<Movie> movieList;
+
+    private Context context;
+
+    public MovieListAdapter(Context context) {
+        this.context = context;
+    }
 
     @NonNull
     @Override
@@ -29,6 +37,14 @@ public class MovieListAdapter extends RecyclerView.Adapter<MovieListAdapter.Movi
     public void onBindViewHolder(@NonNull MovieViewHolder holder, int position) {
         String moviePosterPath = movieList.get(position).getPosterPath();
         MovieController.loadMoviePoster(holder.imageViewPoster, moviePosterPath);
+
+        holder.imageViewPoster.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                ((MainActivity) context).createFragment();
+                //https://stackoverflow.com/questions/28984879/how-to-open-a-different-fragment-on-recyclerview-onclick
+            }
+        });
     }
 
     @Override
