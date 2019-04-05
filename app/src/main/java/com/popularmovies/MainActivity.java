@@ -3,12 +3,19 @@ package com.popularmovies;
 import android.arch.lifecycle.Observer;
 import android.arch.lifecycle.ViewModelProviders;
 import android.content.res.Configuration;
+import android.graphics.Color;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
+import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
+import android.widget.Spinner;
+import android.widget.TextView;
 
 import com.popularmovies.adapter.MovieListAdapter;
 import com.popularmovies.model.Movie;
@@ -35,7 +42,7 @@ public class MainActivity extends AppCompatActivity {
 
         movieController = ViewModelProviders.of(this).get(MovieController.class);
 
-        moviesListRecyclerView = findViewById(R.id.students_recycler_view);
+        moviesListRecyclerView = findViewById(R.id.movies_recycler_view);
         final MovieListAdapter movieListAdapter = new MovieListAdapter();
         moviesListRecyclerView.setAdapter(movieListAdapter);
 
@@ -43,10 +50,8 @@ public class MainActivity extends AppCompatActivity {
         //See https://stackoverflow.com/questions/28709220/understanding-recyclerview-sethasfixedsize
         moviesListRecyclerView.setHasFixedSize(true);
 
-        //Enables image cache to improve smoothness when scrolling
+        //To improve smoothness when scrolling
         moviesListRecyclerView.setItemViewCacheSize(MovieApi.Page.SIZE);
-        moviesListRecyclerView.setDrawingCacheEnabled(true);
-        moviesListRecyclerView.setDrawingCacheQuality(View.DRAWING_CACHE_QUALITY_HIGH);
 
         //Changes the number of columns of the grid based on device orientation
         handleScreenRotationOnRecyclerView();
@@ -68,6 +73,31 @@ public class MainActivity extends AppCompatActivity {
     public void onConfigurationChanged(Configuration newConfig) {
         super.onConfigurationChanged(newConfig);
         handleScreenRotationOnRecyclerView();
+    }
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        getMenuInflater().inflate(R.menu.sort_order_menu, menu);
+
+        MenuItem item = menu.findItem(R.id.sort_order_spinner);
+        Spinner spinner = (Spinner) item.getActionView();
+
+        ArrayAdapter<CharSequence> adapter = ArrayAdapter.createFromResource(this,
+                R.array.sort_orders, android.R.layout.simple_spinner_item);
+        adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        spinner.setAdapter(adapter);
+
+        //Changes the selected item text color
+        spinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+                ((TextView) parent.getChildAt(0)).setTextColor(Color.WHITE);
+            }
+
+            @Override
+            public void onNothingSelected(AdapterView<?> parent) {}
+        });
+        return true;
     }
 
     private void handleScreenRotationOnRecyclerView() {
