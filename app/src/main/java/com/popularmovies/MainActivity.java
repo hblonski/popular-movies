@@ -4,7 +4,6 @@ import android.arch.lifecycle.Observer;
 import android.arch.lifecycle.ViewModelProviders;
 import android.content.res.Configuration;
 import android.graphics.Color;
-import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
@@ -28,7 +27,7 @@ import com.popularmovies.network.MovieListSortOrder;
 
 import java.util.List;
 
-public class MainActivity extends AppCompatActivity implements MovieDetailsFragment.OnFragmentInteractionListener {
+public class MainActivity extends AppCompatActivity {
 
     private final static int NUMBER_OF_COLUMNS_VERTICAL = 2;
 
@@ -122,17 +121,13 @@ public class MainActivity extends AppCompatActivity implements MovieDetailsFragm
         }
     }
 
-    @Override
-    public void onFragmentInteraction(Uri uri) {
-        //Empty
-    }
-
     /**
      * Creates a {@link Fragment} on top of the activity.
      * @param fragment the {@link Fragment}
      * */
     public void createFragment(Fragment fragment) {
         FragmentTransaction fragmentTransaction = getSupportFragmentManager().beginTransaction();
+        fragmentTransaction.setCustomAnimations(R.anim.slide_up, R.anim.slide_down, R.anim.slide_up, R.anim.slide_down);
         fragmentTransaction.replace(R.id.activity_main_frameLayout, fragment);
         //Necessary so that the user can navigate back
         fragmentTransaction.addToBackStack(null);

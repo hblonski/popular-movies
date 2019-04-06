@@ -5,8 +5,11 @@ import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
+import android.widget.TextView;
 
 import com.popularmovies.model.Movie;
+import com.popularmovies.network.MovieController;
 
 
 public class MovieDetailsFragment extends Fragment {
@@ -42,6 +45,14 @@ public class MovieDetailsFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_movie_details, container, false);
+        View fragmentView = inflater.inflate(R.layout.fragment_movie_details, container, false);
+
+        MovieController.loadMoviePoster((ImageView) fragmentView.findViewById(R.id.d_image_view_poster), movie.getPosterPath());
+        ((TextView) fragmentView.findViewById(R.id.d_movie_title)).setText(movie.getTitle());
+        ((TextView) fragmentView.findViewById(R.id.d_movie_overview)).setText(movie.getOverview());
+        ((TextView) fragmentView.findViewById(R.id.d_movie_release_date)).setText(movie.getReleaseDate());
+        ((TextView) fragmentView.findViewById(R.id.d_vote_average)).setText(movie.getVoteAverage().toString());
+
+        return fragmentView;
     }
 }

@@ -10,6 +10,7 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 
 import com.popularmovies.MainActivity;
+import com.popularmovies.MovieDetailsFragment;
 import com.popularmovies.R;
 import com.popularmovies.model.Movie;
 import com.popularmovies.network.MovieController;
@@ -35,14 +36,13 @@ public class MovieListAdapter extends RecyclerView.Adapter<MovieListAdapter.Movi
 
     @Override
     public void onBindViewHolder(@NonNull MovieViewHolder holder, int position) {
-        String moviePosterPath = movieList.get(position).getPosterPath();
-        MovieController.loadMoviePoster(holder.imageViewPoster, moviePosterPath);
+        final Movie holderMovie = movieList.get(position);
+        MovieController.loadMoviePoster(holder.imageViewPoster, holderMovie.getPosterPath());
 
         holder.imageViewPoster.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                ((MainActivity) context).createFragment();
-                //https://stackoverflow.com/questions/28984879/how-to-open-a-different-fragment-on-recyclerview-onclick
+                ((MainActivity) context).createFragment(MovieDetailsFragment.newInstance(holderMovie));
             }
         });
     }
