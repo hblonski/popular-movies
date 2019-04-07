@@ -68,8 +68,18 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onChanged(@Nullable List<Movie> movies) {
                 movieListAdapter.setMovieList(movies);
+                handleNoResultsLoaded(movies.size());
             }
         });
+    }
+
+    private void handleNoResultsLoaded(int resultsCount) {
+        TextView noResultsLoadedLabel = findViewById(R.id.label_no_results);
+        if (resultsCount == 0) {
+            noResultsLoadedLabel.setVisibility(View.VISIBLE);
+        } else {
+            noResultsLoadedLabel.setVisibility(View.GONE);
+        }
     }
 
     @Override

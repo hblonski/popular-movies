@@ -13,7 +13,7 @@
 
         <RelativeLayout
             android:layout_width="match_parent"
-            android:layout_height="match_parent">
+            android:layout_height="wrap_content">
 
             <ImageView
                 android:id="@+id/d_image_view_poster"
@@ -54,7 +54,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 style="@style/DetailsFragmentLabel"
-                android:text="Release date: "
+                android:text="@string/release_date"
                 android:layout_below="@id/d_movie_overview" />
 
             <TextView
@@ -63,15 +63,15 @@
                 android:layout_height="wrap_content"
                 style="@style/DetailsFragmentContent"
                 android:layout_below="@id/d_movie_overview"
-                android:layout_toRightOf="@id/d_movie_release_date_label" />
+                android:layout_toEndOf="@id/d_movie_release_date_label" />
 
             <TextView
                 android:id="@+id/d_movie_vote_average_label"
+                style="@style/DetailsFragmentLabel"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                style="@style/DetailsFragmentLabel"
-                android:text="Vote average: "
-                android:layout_below="@id/d_movie_release_date" />
+                android:layout_below="@id/d_movie_release_date"
+                android:text="@string/vote_average" />
 
             <TextView
                 android:id="@+id/d_vote_average"
@@ -79,7 +79,7 @@
                 android:layout_height="wrap_content"
                 style="@style/DetailsFragmentContent"
                 android:layout_below="@id/d_movie_release_date"
-                android:layout_toRightOf="@id/d_movie_vote_average_label" />
+                android:layout_toEndOf="@id/d_movie_vote_average_label" />
 
         </RelativeLayout>
 
