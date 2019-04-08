@@ -6,6 +6,8 @@ import android.content.res.Configuration;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -45,7 +47,7 @@ public class MainActivity extends AppCompatActivity {
         movieController = ViewModelProviders.of(this).get(MovieController.class);
 
         moviesListRecyclerView = findViewById(R.id.movies_recycler_view);
-        final MovieListAdapter movieListAdapter = new MovieListAdapter();
+        final MovieListAdapter movieListAdapter = new MovieListAdapter(this);
         moviesListRecyclerView.setAdapter(movieListAdapter);
 
         //Set fixed size for the RecyclerView items, since they'll always contain images of same size
@@ -66,8 +68,18 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onChanged(@Nullable List<Movie> movies) {
                 movieListAdapter.setMovieList(movies);
+                handleNoResultsLoaded(movies.size());
             }
         });
+    }
+
+    private void handleNoResultsLoaded(int resultsCount) {
+        TextView noResultsLoadedLabel = findViewById(R.id.label_no_results);
+        if (resultsCount == 0) {
+            noResultsLoadedLabel.setVisibility(View.VISIBLE);
+        } else {
+            noResultsLoadedLabel.setVisibility(View.GONE);
+        }
     }
 
     @Override
@@ -117,5 +129,18 @@ public class MainActivity extends AppCompatActivity {
         } else {
             moviesListRecyclerView.setLayoutManager(new GridLayoutManager(this, NUMBER_OF_COLUMNS_HORIZONTAL));
         }
+    }
+
+    /**
+     * Creates a {@link Fragment} on top of the activity.
+     * @param fragment the {@link Fragment}
+     * */
+    public void createFragment(Fragment fragment) {
+        FragmentTransaction fragmentTransaction = getSupportFragmentManager().beginTransaction();
+        fragmentTransaction.setCustomAnimations(R.anim.slide_up, R.anim.slide_down, R.anim.slide_up, R.anim.slide_down);
+        fragmentTransaction.replace(R.id.activity_main_frameLayout, fragment);
+        //Necessary so that the user can navigate back
+        fragmentTransaction.addToBackStack(null);
+        fragmentTransaction.commit();
     }
 }

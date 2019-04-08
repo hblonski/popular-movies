@@ -6,7 +6,18 @@
         <item name="colorPrimary">@color/colorPrimary</item>
         <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
         <item name="colorAccent">@color/colorAccent</item>
-        <item name="android:navigationBarColor">@color/primary_material_dark</item>
+    </style>
+
+    <style name="DetailsFragmentLabel" parent="android:Widget.TextView">
+        <item name="android:textColor">@android:color/black</item>
+        <item name="android:textStyle">bold</item>
+        <item name="android:layout_margin">7dp</item>
+        <item name="android:fontFamily">@font/noto_sans</item>
+    </style>
+
+    <style name="DetailsFragmentContent" parent="android:Widget.TextView">
+        <item name="android:layout_margin">7dp</item>
+        <item name="android:fontFamily">@font/noto_sans</item>
     </style>
 
 </resources>

@@ -6,6 +6,7 @@ import android.arch.lifecycle.MutableLiveData;
 import android.support.annotation.NonNull;
 import android.widget.ImageView;
 
+import com.popularmovies.R;
 import com.popularmovies.model.Movie;
 import com.squareup.picasso.Picasso;
 
@@ -50,8 +51,19 @@ public class MovieController extends AndroidViewModel implements Callback<MovieA
         call.enqueue(this);
     }
 
-    public static void loadMoviePoster(ImageView imageView, String posterPath) {
-        Picasso.get().load(buildPosterURL(posterPath)).into(imageView);
+    public static void loadMoviePoster(final ImageView imageView, String posterPath) {
+        final Picasso picassoInstance = Picasso.get();
+        picassoInstance.load(buildPosterURL(posterPath)).into(imageView, new com.squareup.picasso.Callback() {
+            @Override
+            public void onSuccess() {
+                //Empty
+            }
+
+            @Override
+            public void onError(Exception e) {
+                picassoInstance.load(R.drawable.load_poster_error_image).into(imageView);
+            }
+        });
     }
 
     private static String buildPosterURL(String posterPath) {
