@@ -8,6 +8,7 @@ import android.widget.ImageView;
 
 import com.popularmovies.R;
 import com.popularmovies.model.Movie;
+import com.popularmovies.util.RetrofitUtil;
 import com.squareup.picasso.Picasso;
 
 import java.net.HttpURLConnection;
@@ -29,6 +30,8 @@ public class MovieController extends AndroidViewModel implements Callback<MovieA
 
     private MovieApi movieApi;
 
+    private boolean isLoadingMore = false;
+
     public MovieController(@NonNull Application application) {
         super(application);
         Retrofit retrofitInstance = RetrofitUtil.getRetrofitInstance(MovieApi.BASE_URL);
@@ -48,6 +51,7 @@ public class MovieController extends AndroidViewModel implements Callback<MovieA
             default:
                 throw new InvalidParameterException("Invalid sort order.");
         }
+        isLoadingMore = page > 1;
         call.enqueue(this);
     }
 
@@ -74,7 +78,13 @@ public class MovieController extends AndroidViewModel implements Callback<MovieA
     public void onResponse(Call<MovieApi.Page> call, Response<MovieApi.Page> response) {
         if (response.code() == HttpURLConnection.HTTP_OK) {
             MovieApi.Page page = response.body();
-            moviesList.setValue(page.getResults());
+            if (isLoadingMore) {
+                List<Movie> currentList = moviesList.getValue();
+                currentList.addAll(page.getResults());
+                moviesList.setValue(currentList);
+            } else {
+                moviesList.setValue(page.getResults());
+            }
         }
     }
 

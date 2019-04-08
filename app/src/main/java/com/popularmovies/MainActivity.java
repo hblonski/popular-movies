@@ -37,7 +37,9 @@ public class MainActivity extends AppCompatActivity {
 
     private MovieListSortOrder currentSortOrder;
 
-    RecyclerView moviesListRecyclerView;
+    private RecyclerView moviesListRecyclerView;
+
+    private boolean loading = false;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -59,6 +61,20 @@ public class MainActivity extends AppCompatActivity {
 
         //Changes the number of columns of the grid based on device orientation
         handleScreenRotationOnRecyclerView();
+
+        moviesListRecyclerView.addOnScrollListener(new RecyclerView.OnScrollListener() {
+            @Override
+            public void onScrolled(RecyclerView recyclerView, int dx, int dy) {
+                super.onScrolled(recyclerView, dx, dy);
+                int visibleThreshold = 6;
+                int lastVisibleItemPosition = ((GridLayoutManager) moviesListRecyclerView.getLayoutManager()).findLastVisibleItemPosition();
+
+                if (!loading && (lastVisibleItemPosition + visibleThreshold) > 20 && dy > 0) {
+                    loading = true;
+                    movieController.fetchMovieList(MovieListSortOrder.POPULAR, 2);
+                }
+            }
+        });
 
         observeDataChange(movieListAdapter);
     }
@@ -117,7 +133,9 @@ public class MainActivity extends AppCompatActivity {
             }
 
             @Override
-            public void onNothingSelected(AdapterView<?> parent) {}
+            public void onNothingSelected(AdapterView<?> parent) {
+                //Empty
+            }
         });
 
         return true;
