@@ -26,33 +26,75 @@ public class MovieController extends AndroidViewModel implements Callback<MovieA
     //Replace the value with your MovieDB api key
     private static final String API_KEY = "";
 
+    private static final int FIRST_PAGE = 1;
+
     private MutableLiveData<List<Movie>> moviesList;
 
     private MovieApi movieApi;
 
-    private boolean isLoadingMore = false;
+    private Integer currentPage;
+
+    private MovieListSortOrder currentSortOrder;
+
+    private boolean loading = false;
 
     public MovieController(@NonNull Application application) {
         super(application);
         Retrofit retrofitInstance = RetrofitUtil.getRetrofitInstance(MovieApi.BASE_URL);
         movieApi = retrofitInstance.create(MovieApi.class);
         moviesList = new MutableLiveData<>();
+        currentPage = null;
+        currentSortOrder = null;
     }
 
-    public void fetchMovieList(MovieListSortOrder sortOrder, Integer page) {
+    public void fetchNextMoviesListPage(MovieListSortOrder sortOrder) {
+        Integer nextPage;
+        if (currentSortOrder != sortOrder) {
+            nextPage = FIRST_PAGE;
+            currentSortOrder = sortOrder;
+        } else {
+            nextPage = currentPage + 1;
+        }
         Call<MovieApi.Page> call;
         switch (sortOrder) {
             case POPULAR:
-                call = movieApi.getPopularMovies(page, API_KEY);
+                call = movieApi.getPopularMovies(nextPage, API_KEY);
                 break;
             case TOP_RATED:
-                call = movieApi.getTopRatedMovies(page, API_KEY);
+                call = movieApi.getTopRatedMovies(nextPage, API_KEY);
                 break;
             default:
                 throw new InvalidParameterException("Invalid sort order.");
         }
-        isLoadingMore = page > 1;
+        loading = true;
         call.enqueue(this);
+    }
+
+    @Override
+    public void onResponse(Call<MovieApi.Page> call, Response<MovieApi.Page> response) {
+        if (response.code() == HttpURLConnection.HTTP_OK) {
+            MovieApi.Page page = response.body();
+            if (!page.getPage().equals(FIRST_PAGE)) {
+                currentPage = page.getPage();
+                List<Movie> currentList = moviesList.getValue();
+                currentList.addAll(page.getResults());
+                moviesList.setValue(currentList);
+            } else {
+                currentPage = FIRST_PAGE;
+                moviesList.setValue(page.getResults());
+            }
+        }
+        loading = false;
+    }
+
+    @Override
+    public void onFailure(Call<MovieApi.Page> call, Throwable t) {
+        moviesList.setValue(Collections.<Movie>emptyList());
+        loading = false;
+    }
+
+    public MutableLiveData<List<Movie>> getMoviesList() {
+        return moviesList;
     }
 
     public static void loadMoviePoster(final ImageView imageView, String posterPath) {
@@ -70,30 +112,11 @@ public class MovieController extends AndroidViewModel implements Callback<MovieA
         });
     }
 
+    public boolean isLoading() {
+        return loading;
+    }
+
     private static String buildPosterURL(String posterPath) {
         return MovieApi.BASE_URL_IMAGES.concat(posterPath);
-    }
-
-    @Override
-    public void onResponse(Call<MovieApi.Page> call, Response<MovieApi.Page> response) {
-        if (response.code() == HttpURLConnection.HTTP_OK) {
-            MovieApi.Page page = response.body();
-            if (isLoadingMore) {
-                List<Movie> currentList = moviesList.getValue();
-                currentList.addAll(page.getResults());
-                moviesList.setValue(currentList);
-            } else {
-                moviesList.setValue(page.getResults());
-            }
-        }
-    }
-
-    @Override
-    public void onFailure(Call<MovieApi.Page> call, Throwable t) {
-        moviesList.setValue(Collections.<Movie>emptyList());
-    }
-
-    public MutableLiveData<List<Movie>> getMoviesList() {
-        return moviesList;
     }
 }

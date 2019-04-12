@@ -47,7 +47,8 @@ public class MovieDetailsFragment extends Fragment {
         // Inflate the layout for this fragment
         View fragmentView = inflater.inflate(R.layout.fragment_movie_details, container, false);
 
-        MovieController.loadMoviePoster((ImageView) fragmentView.findViewById(R.id.d_image_view_poster), movie.getPosterPath());
+        MovieController.loadMoviePoster((ImageView)
+                fragmentView.findViewById(R.id.d_image_view_poster), movie.getPosterPath());
         ((TextView) fragmentView.findViewById(R.id.d_movie_title)).setText(movie.getTitle());
         ((TextView) fragmentView.findViewById(R.id.d_movie_overview)).setText(movie.getOverview());
         ((TextView) fragmentView.findViewById(R.id.d_movie_release_date)).setText(movie.getReleaseDate());
