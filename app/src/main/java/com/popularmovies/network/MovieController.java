@@ -116,6 +116,10 @@ public class MovieController extends AndroidViewModel implements Callback<MovieA
         return loading;
     }
 
+    public MovieListSortOrder getCurrentSortOrder() {
+        return this.currentSortOrder;
+    }
+
     private static String buildPosterURL(String posterPath) {
         return MovieApi.BASE_URL_IMAGES.concat(posterPath);
     }

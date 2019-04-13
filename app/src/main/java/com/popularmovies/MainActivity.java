@@ -72,7 +72,7 @@ public class MainActivity extends AppCompatActivity {
 
                 if (!movieController.isLoading() &&
                         (lastVisibleItemPosition + VISIBLE_THRESHOLD) > MovieApi.Page.SIZE && dy > 0) {
-                    movieController.fetchNextMoviesListPage(MovieListSortOrder.POPULAR);
+                    movieController.fetchNextMoviesListPage(movieController.getCurrentSortOrder());
                 }
             }
         });
