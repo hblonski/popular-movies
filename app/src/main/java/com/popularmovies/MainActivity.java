@@ -33,7 +33,7 @@ public class MainActivity extends AppCompatActivity {
 
     private final static int NUMBER_OF_COLUMNS_HORIZONTAL = 4;
 
-    public final static int VISIBLE_THRESHOLD = 6;
+    private final static int VISIBLE_THRESHOLD = 6;
 
     private MovieController movieController;
 
@@ -85,7 +85,7 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onChanged(@Nullable List<Movie> movies) {
                 movieListAdapter.setMovieList(movies);
-                handleNoResultsLoaded(movies.size());
+                handleNoResultsLoaded(movies != null ? movies.size() : 0);
             }
         });
     }
