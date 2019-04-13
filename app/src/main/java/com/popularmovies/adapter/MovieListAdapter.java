@@ -30,7 +30,8 @@ public class MovieListAdapter extends RecyclerView.Adapter<MovieListAdapter.Movi
     @NonNull
     @Override
     public MovieViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-        CardView movieCard = (CardView) LayoutInflater.from(parent.getContext()).inflate(R.layout.movie_card, parent, false);
+        CardView movieCard = (CardView)
+                LayoutInflater.from(parent.getContext()).inflate(R.layout.movie_card, parent, false);
         return new MovieViewHolder(movieCard);
     }
 

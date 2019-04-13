@@ -1,4 +1,4 @@
-package com.popularmovies.network;
+package com.popularmovies.util;
 
 import retrofit2.Retrofit;
 import retrofit2.converter.jackson.JacksonConverterFactory;

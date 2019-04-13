@@ -33,11 +33,13 @@ public class MainActivity extends AppCompatActivity {
 
     private final static int NUMBER_OF_COLUMNS_HORIZONTAL = 4;
 
+    public final static int VISIBLE_THRESHOLD = 6;
+
     private MovieController movieController;
 
     private MovieListSortOrder currentSortOrder;
 
-    RecyclerView moviesListRecyclerView;
+    private RecyclerView moviesListRecyclerView;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -60,6 +62,21 @@ public class MainActivity extends AppCompatActivity {
         //Changes the number of columns of the grid based on device orientation
         handleScreenRotationOnRecyclerView();
 
+        //Infinite scroll
+        moviesListRecyclerView.addOnScrollListener(new RecyclerView.OnScrollListener() {
+            @Override
+            public void onScrolled(RecyclerView recyclerView, int dx, int dy) {
+                super.onScrolled(recyclerView, dx, dy);
+                int lastVisibleItemPosition = ((GridLayoutManager)
+                        moviesListRecyclerView.getLayoutManager()).findLastVisibleItemPosition();
+
+                if (!movieController.isLoading() &&
+                        (lastVisibleItemPosition + VISIBLE_THRESHOLD) > MovieApi.Page.SIZE && dy > 0) {
+                    movieController.fetchNextMoviesListPage(movieController.getCurrentSortOrder());
+                }
+            }
+        });
+
         observeDataChange(movieListAdapter);
     }
 
@@ -74,6 +91,7 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void handleNoResultsLoaded(int resultsCount) {
+        //If there are no results, a "No results" label is loaded on the screen
         TextView noResultsLoadedLabel = findViewById(R.id.label_no_results);
         if (resultsCount == 0) {
             noResultsLoadedLabel.setVisibility(View.VISIBLE);
@@ -86,6 +104,16 @@ public class MainActivity extends AppCompatActivity {
     public void onConfigurationChanged(Configuration newConfig) {
         super.onConfigurationChanged(newConfig);
         handleScreenRotationOnRecyclerView();
+    }
+
+    private void handleScreenRotationOnRecyclerView() {
+        if (getResources().getConfiguration().orientation == Configuration.ORIENTATION_PORTRAIT) {
+            moviesListRecyclerView.setLayoutManager(
+                    new GridLayoutManager(this, NUMBER_OF_COLUMNS_VERTICAL));
+        } else {
+            moviesListRecyclerView.setLayoutManager(
+                    new GridLayoutManager(this, NUMBER_OF_COLUMNS_HORIZONTAL));
+        }
     }
 
     @Override
@@ -109,35 +137,33 @@ public class MainActivity extends AppCompatActivity {
                 String selectedItemLabel = selectedItem.getText().toString();
                 if (selectedItemLabel.equals(getResources().getString(R.string.popular))) {
                     currentSortOrder = MovieListSortOrder.POPULAR;
-                    movieController.fetchMovieList(currentSortOrder, 1);
+                    movieController.fetchNextMoviesListPage(currentSortOrder);
                 } else {
                     currentSortOrder = MovieListSortOrder.TOP_RATED;
-                    movieController.fetchMovieList(currentSortOrder, 1);
+                    movieController.fetchNextMoviesListPage(currentSortOrder);
                 }
             }
 
             @Override
-            public void onNothingSelected(AdapterView<?> parent) {}
+            public void onNothingSelected(AdapterView<?> parent) {
+                //Empty
+            }
         });
 
         return true;
     }
 
-    private void handleScreenRotationOnRecyclerView() {
-        if (getResources().getConfiguration().orientation == Configuration.ORIENTATION_PORTRAIT) {
-            moviesListRecyclerView.setLayoutManager(new GridLayoutManager(this, NUMBER_OF_COLUMNS_VERTICAL));
-        } else {
-            moviesListRecyclerView.setLayoutManager(new GridLayoutManager(this, NUMBER_OF_COLUMNS_HORIZONTAL));
-        }
-    }
-
     /**
      * Creates a {@link Fragment} on top of the activity.
+     *
      * @param fragment the {@link Fragment}
-     * */
+     */
     public void createFragment(Fragment fragment) {
         FragmentTransaction fragmentTransaction = getSupportFragmentManager().beginTransaction();
-        fragmentTransaction.setCustomAnimations(R.anim.slide_up, R.anim.slide_down, R.anim.slide_up, R.anim.slide_down);
+        fragmentTransaction.setCustomAnimations(R.anim.slide_up,
+                R.anim.slide_down,
+                R.anim.slide_up,
+                R.anim.slide_down);
         fragmentTransaction.replace(R.id.activity_main_frameLayout, fragment);
         //Necessary so that the user can navigate back
         fragmentTransaction.addToBackStack(null);

@@ -5,7 +5,7 @@ import android.os.Parcelable;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonProperty;
-import com.popularmovies.adapter.FormatUtil;
+import com.popularmovies.util.FormatUtil;
 
 import java.text.ParseException;
 

@@ -1,4 +1,4 @@
-package com.popularmovies.adapter;
+package com.popularmovies.util;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
