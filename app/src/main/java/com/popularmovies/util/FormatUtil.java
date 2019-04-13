@@ -6,9 +6,9 @@ import java.util.Date;
 
 public abstract class FormatUtil {
 
-    public final static  String ORIGINAL_DATE_FORMAT = "yyyy-MM-dd";
+    private final static  String ORIGINAL_DATE_FORMAT = "yyyy-MM-dd";
 
-    public final static  String APP_DATE_FORMAT = "dd/MM/yyyy";
+    private final static  String APP_DATE_FORMAT = "dd/MM/yyyy";
 
     public static String formatDate (String unformattedDate) throws ParseException {
         if (unformattedDate != null) {
