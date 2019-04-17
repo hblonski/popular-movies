@@ -2,26 +2,24 @@ package com.popularmovies;
 
 import android.arch.lifecycle.Observer;
 import android.arch.lifecycle.ViewModelProviders;
-import android.content.res.Configuration;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.AppCompatActivity;
-import android.support.v7.widget.GridLayoutManager;
-import android.support.v7.widget.RecyclerView;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.AbsListView;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
+import android.widget.GridView;
 import android.widget.Spinner;
 import android.widget.TextView;
 
 import com.popularmovies.adapter.MovieListAdapter;
 import com.popularmovies.model.Movie;
-import com.popularmovies.network.MovieApi;
 import com.popularmovies.network.MovieController;
 import com.popularmovies.network.MovieListSortOrder;
 
@@ -29,17 +27,13 @@ import java.util.List;
 
 public class MainActivity extends AppCompatActivity {
 
-    private final static int NUMBER_OF_COLUMNS_VERTICAL = 2;
-
-    private final static int NUMBER_OF_COLUMNS_HORIZONTAL = 4;
-
     private final static int VISIBLE_THRESHOLD = 6;
 
     private MovieController movieController;
 
     private MovieListSortOrder currentSortOrder;
 
-    private RecyclerView moviesListRecyclerView;
+    private GridView moviesGridView;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -48,30 +42,23 @@ public class MainActivity extends AppCompatActivity {
 
         movieController = ViewModelProviders.of(this).get(MovieController.class);
 
-        moviesListRecyclerView = findViewById(R.id.movies_recycler_view);
+        moviesGridView = findViewById(R.id.movies_grid_view);
         final MovieListAdapter movieListAdapter = new MovieListAdapter(this);
-        moviesListRecyclerView.setAdapter(movieListAdapter);
-
-        //Set fixed size for the RecyclerView items, since they'll always contain images of same size
-        //See https://stackoverflow.com/questions/28709220/understanding-recyclerview-sethasfixedsize
-        moviesListRecyclerView.setHasFixedSize(true);
-
-        //To improve smoothness when scrolling
-        moviesListRecyclerView.setItemViewCacheSize(MovieApi.Page.SIZE);
-
-        //Changes the number of columns of the grid based on device orientation
-        handleScreenRotationOnRecyclerView();
+        moviesGridView.setAdapter(movieListAdapter);
 
         //Infinite scroll
-        moviesListRecyclerView.addOnScrollListener(new RecyclerView.OnScrollListener() {
-            @Override
-            public void onScrolled(RecyclerView recyclerView, int dx, int dy) {
-                super.onScrolled(recyclerView, dx, dy);
-                int lastVisibleItemPosition = ((GridLayoutManager)
-                        moviesListRecyclerView.getLayoutManager()).findLastVisibleItemPosition();
+        moviesGridView.setOnScrollListener(new GridView.OnScrollListener() {
 
+            @Override
+            public void onScrollStateChanged(AbsListView view, int scrollState) {
+            }
+
+            @Override
+            public void onScroll(AbsListView view, int firstVisibleItem, int visibleItemCount, int totalItemCount) {
+                int lastVisibleItemPosition = firstVisibleItem + visibleItemCount;
                 if (!movieController.isLoading() &&
-                        (lastVisibleItemPosition + VISIBLE_THRESHOLD) > MovieApi.Page.SIZE && dy > 0) {
+                        firstVisibleItem > 0 &&
+                        (lastVisibleItemPosition + VISIBLE_THRESHOLD) > totalItemCount) {
                     movieController.fetchNextMoviesListPage(movieController.getCurrentSortOrder());
                 }
             }
@@ -97,22 +84,6 @@ public class MainActivity extends AppCompatActivity {
             noResultsLoadedLabel.setVisibility(View.VISIBLE);
         } else {
             noResultsLoadedLabel.setVisibility(View.GONE);
-        }
-    }
-
-    @Override
-    public void onConfigurationChanged(Configuration newConfig) {
-        super.onConfigurationChanged(newConfig);
-        handleScreenRotationOnRecyclerView();
-    }
-
-    private void handleScreenRotationOnRecyclerView() {
-        if (getResources().getConfiguration().orientation == Configuration.ORIENTATION_PORTRAIT) {
-            moviesListRecyclerView.setLayoutManager(
-                    new GridLayoutManager(this, NUMBER_OF_COLUMNS_VERTICAL));
-        } else {
-            moviesListRecyclerView.setLayoutManager(
-                    new GridLayoutManager(this, NUMBER_OF_COLUMNS_HORIZONTAL));
         }
     }
 

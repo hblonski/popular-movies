@@ -4,12 +4,13 @@ import android.app.Application;
 import android.arch.lifecycle.AndroidViewModel;
 import android.arch.lifecycle.MutableLiveData;
 import android.support.annotation.NonNull;
+import android.view.View;
 import android.widget.ImageView;
 
+import com.bumptech.glide.Glide;
 import com.popularmovies.R;
 import com.popularmovies.model.Movie;
 import com.popularmovies.util.RetrofitUtil;
-import com.squareup.picasso.Picasso;
 
 import java.net.HttpURLConnection;
 import java.security.InvalidParameterException;
@@ -97,19 +98,11 @@ public class MovieController extends AndroidViewModel implements Callback<MovieA
         return moviesList;
     }
 
-    public static void loadMoviePoster(final ImageView imageView, String posterPath) {
-        final Picasso picassoInstance = Picasso.get();
-        picassoInstance.load(buildPosterURL(posterPath)).into(imageView, new com.squareup.picasso.Callback() {
-            @Override
-            public void onSuccess() {
-                //Empty
-            }
-
-            @Override
-            public void onError(Exception e) {
-                picassoInstance.load(R.drawable.load_poster_error_image).into(imageView);
-            }
-        });
+    public static void loadMoviePoster(View view, final ImageView imageView, String posterPath) {
+        Glide.with(view)
+                .load(buildPosterURL(posterPath))
+                .error(R.drawable.load_poster_error_image)
+                .into(imageView);
     }
 
     public boolean isLoading() {
