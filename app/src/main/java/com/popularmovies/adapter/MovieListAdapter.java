@@ -56,7 +56,7 @@ public class MovieListAdapter extends BaseAdapter {
         }
         ImageView imageViewPoster = convertView.findViewById(R.id.image_view_poster);
         final Movie viewMovie = movieList.get(position);
-        MovieController.loadMoviePoster(imageViewPoster, viewMovie.getPosterPath());
+        MovieController.loadMoviePoster(convertView, imageViewPoster, viewMovie.getPosterPath());
         imageViewPoster.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
