@@ -6,17 +6,20 @@
         <item name="colorPrimary">@color/colorPrimary</item>
         <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
         <item name="colorAccent">@color/colorAccent</item>
+        <item name="android:actionBarStyle">@style/AppActionBar</item>
     </style>
 
-    <style name="DetailsFragmentLabel" parent="android:Widget.TextView">
-        <item name="android:textColor">@android:color/black</item>
+    <style name="AppActionBar">
+        <item name="android:background">@color/colorPrimaryDark</item>
+    </style>
+
+    <style name="DetailsLabel" parent="android:Widget.TextView">
+        <item name="android:textColor">@color/primaryText</item>
         <item name="android:textStyle">bold</item>
-        <item name="android:layout_margin">7dp</item>
         <item name="android:fontFamily">@font/noto_sans</item>
     </style>
 
-    <style name="DetailsFragmentContent" parent="android:Widget.TextView">
-        <item name="android:layout_margin">7dp</item>
+    <style name="DetailsContent" parent="android:Widget.TextView">
         <item name="android:fontFamily">@font/noto_sans</item>
     </style>
 

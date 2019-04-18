@@ -54,7 +54,7 @@ public class MovieDetailsFragment extends Fragment {
         ((TextView) fragmentView.findViewById(R.id.d_movie_title)).setText(movie.getTitle());
         ((TextView) fragmentView.findViewById(R.id.d_movie_overview)).setText(movie.getOverview());
         ((TextView) fragmentView.findViewById(R.id.d_movie_release_date)).setText(movie.getReleaseDate());
-        ((TextView) fragmentView.findViewById(R.id.d_vote_average)).setText(movie.getVoteAverage().toString());
+        ((TextView) fragmentView.findViewById(R.id.d_user_score)).setText(String.format("%s/10", movie.getVoteAverage().toString()));
 
         return fragmentView;
     }
