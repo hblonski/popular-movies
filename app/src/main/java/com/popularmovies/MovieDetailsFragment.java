@@ -7,17 +7,8 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-import androidx.annotation.NonNull;
-import androidx.fragment.app.Fragment;
-import androidx.lifecycle.Observer;
-import androidx.lifecycle.ViewModelProviders;
-
-import com.airbnb.lottie.LottieAnimationView;
-import com.popularmovies.data.entity.FavoriteMovie;
-import com.popularmovies.data.viewmodel.FavoriteMovieViewModel;
 import com.popularmovies.model.Movie;
 import com.popularmovies.network.MovieController;
-import com.popularmovies.util.LottieHelper;
 
 
 public class MovieDetailsFragment extends Fragment {
@@ -69,6 +60,10 @@ public class MovieDetailsFragment extends Fragment {
         ((TextView) fragmentView.findViewById(R.id.d_user_score)).setText(String.format("%s/10", movie.getVoteAverage().toString()));
 
         setupFavoriteButton(fragmentView);
+
+        YouTubePlayerSupportFragment youTubePlayerSupportFragment = (YouTubePlayerSupportFragment)
+                getChildFragmentManager().findFragmentById(R.id.youtube_player_fragment);
+        YouTubeController.initializeYouTubeVideoPlayer(youTubePlayerSupportFragment, "TODO");
 
         return fragmentView;
     }
