@@ -1,4 +1,4 @@
-package com.popularmovies.network;
+package com.popularmovies.network.themoviedb;
 
 import android.app.Application;
 import android.view.View;
@@ -11,7 +11,8 @@ import androidx.lifecycle.MutableLiveData;
 import com.bumptech.glide.Glide;
 import com.popularmovies.R;
 import com.popularmovies.model.Movie;
-import com.popularmovies.util.RetrofitUtil;
+import com.popularmovies.model.MoviesResultPage;
+import com.popularmovies.util.RetrofitServiceGenerator;
 
 import java.net.HttpURLConnection;
 import java.security.InvalidParameterException;
@@ -21,18 +22,16 @@ import java.util.List;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
-import retrofit2.Retrofit;
 
-public class MovieController extends AndroidViewModel implements Callback<MovieApi.Page> {
+import static com.popularmovies.network.themoviedb.MoviesApiClient.API_KEY;
 
-    //Replace the value with your MovieDB api key
-    private static final String API_KEY = "";
+public class MoviesController extends AndroidViewModel implements Callback<MoviesResultPage> {
 
     private static final int FIRST_PAGE = 1;
 
     private MutableLiveData<List<Movie>> moviesList;
 
-    private MovieApi movieApi;
+    private MoviesApiClient moviesApiClient;
 
     private Integer currentPage;
 
@@ -40,10 +39,10 @@ public class MovieController extends AndroidViewModel implements Callback<MovieA
 
     private boolean loading = false;
 
-    public MovieController(@NonNull Application application) {
+    public MoviesController(@NonNull Application application) {
         super(application);
-        Retrofit retrofitInstance = RetrofitUtil.getRetrofitInstance(MovieApi.BASE_URL);
-        movieApi = retrofitInstance.create(MovieApi.class);
+        moviesApiClient = RetrofitServiceGenerator
+                .generateService(MoviesApiClient.BASE_URL, MoviesApiClient.class);
         moviesList = new MutableLiveData<>();
         currentPage = null;
         currentSortOrder = null;
@@ -57,13 +56,13 @@ public class MovieController extends AndroidViewModel implements Callback<MovieA
         } else {
             nextPage = currentPage + 1;
         }
-        Call<MovieApi.Page> call;
+        Call<MoviesResultPage> call;
         switch (sortOrder) {
             case POPULAR:
-                call = movieApi.getPopularMovies(nextPage, API_KEY);
+                call = moviesApiClient.getPopularMovies(nextPage, API_KEY);
                 break;
             case TOP_RATED:
-                call = movieApi.getTopRatedMovies(nextPage, API_KEY);
+                call = moviesApiClient.getTopRatedMovies(nextPage, API_KEY);
                 break;
             default:
                 throw new InvalidParameterException("Invalid sort order.");
@@ -73,24 +72,25 @@ public class MovieController extends AndroidViewModel implements Callback<MovieA
     }
 
     @Override
-    public void onResponse(Call<MovieApi.Page> call, Response<MovieApi.Page> response) {
+    public void onResponse(Call<MoviesResultPage> call, Response<MoviesResultPage> response) {
         if (response.code() == HttpURLConnection.HTTP_OK) {
-            MovieApi.Page page = response.body();
-            if (!page.getPage().equals(FIRST_PAGE)) {
-                currentPage = page.getPage();
+            MoviesResultPage moviesResultPage = response.body();
+            if (!moviesResultPage.getPage().equals(FIRST_PAGE)) {
+                currentPage = moviesResultPage.getPage();
                 List<Movie> currentList = moviesList.getValue();
-                currentList.addAll(page.getResults());
+                currentList.addAll(moviesResultPage.getResults());
                 moviesList.setValue(currentList);
             } else {
                 currentPage = FIRST_PAGE;
-                moviesList.setValue(page.getResults());
+                moviesList.setValue(moviesResultPage.getResults());
             }
+            new VideosController(moviesList.getValue()).fetchMoviesVideos();
         }
         loading = false;
     }
 
     @Override
-    public void onFailure(Call<MovieApi.Page> call, Throwable t) {
+    public void onFailure(Call<MoviesResultPage> call, Throwable t) {
         moviesList.setValue(Collections.<Movie>emptyList());
         loading = false;
     }
@@ -115,6 +115,6 @@ public class MovieController extends AndroidViewModel implements Callback<MovieA
     }
 
     private static String buildPosterURL(String posterPath) {
-        return MovieApi.BASE_URL_IMAGES.concat(posterPath);
+        return MoviesApiClient.BASE_URL_IMAGES.concat(posterPath);
     }
 }

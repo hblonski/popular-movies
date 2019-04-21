@@ -4,11 +4,11 @@ import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.popularmovies.model.Movie;
-import com.popularmovies.network.MovieController;
+import com.popularmovies.network.themoviedb.MoviesController;
+import com.popularmovies.network.youtube.YouTubeController;
 
 
 public class MovieDetailsFragment extends Fragment {
@@ -51,8 +51,8 @@ public class MovieDetailsFragment extends Fragment {
         // Inflate the layout for this fragment
         View fragmentView = inflater.inflate(R.layout.fragment_movie_details, container, false);
 
-        MovieController.loadMoviePoster(fragmentView,
-                (ImageView) fragmentView.findViewById(R.id.d_image_view_poster),
+        MoviesController.loadMoviePoster(fragmentView,
+                fragmentView.findViewById(R.id.d_image_view_poster),
                 movie.getPosterPath());
         ((TextView) fragmentView.findViewById(R.id.d_movie_title)).setText(movie.getTitle());
         ((TextView) fragmentView.findViewById(R.id.d_movie_overview)).setText(movie.getOverview());

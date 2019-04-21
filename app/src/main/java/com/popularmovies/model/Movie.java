@@ -8,6 +8,7 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import com.popularmovies.util.FormatUtil;
 
 import java.text.ParseException;
+import java.util.List;
 
 /**
  * Movie class. Some getters and setters, as well as the empty public constructor, despite being
@@ -21,7 +22,7 @@ public class Movie implements Parcelable {
     }
 
     @JsonProperty("id")
-    private String id;
+    private Integer id;
 
     @JsonProperty("vote_average")
     private Double voteAverage;
@@ -38,11 +39,13 @@ public class Movie implements Parcelable {
     @JsonProperty("release_date")
     private String releaseDate;
 
-    public String getId() {
+    private List<Video> videos;
+
+    public Integer getId() {
         return id;
     }
 
-    public void setId(String id) {
+    public void setId(Integer id) {
         this.id = id;
     }
 
@@ -91,18 +94,27 @@ public class Movie implements Parcelable {
         }
     }
 
+    public List<Video> getVideos() {
+        return this.videos;
+    }
+
+    public void setVideos(List<Video> videos) {
+        this.videos = videos;
+    }
+
     //Parcelable interface methods implementation. This interface is used to allow a Movie object
     //to be passed between activities/fragments.
 
     //Constructor that takes a Parcel and gives you an object populated with it's values. The order
     //must be the same used in the writeToParcel method (see below).
     private Movie(Parcel in) {
-        id = in.readString();
+        id = in.readInt();
         voteAverage = in.readDouble();
         title = in.readString();
         posterPath = in.readString();
         overview = in.readString();
         releaseDate = in.readString();
+        videos = in.readArrayList(Video.class.getClassLoader());
     }
 
     //This is used to regenerate the object. All Parcelables must have a CREATOR
@@ -124,10 +136,12 @@ public class Movie implements Parcelable {
 
     @Override
     public void writeToParcel(Parcel dest, int flags) {
-        dest.writeString(id);
+        dest.writeInt(id);
         dest.writeDouble(voteAverage);
         dest.writeString(title);
         dest.writeString(posterPath);
         dest.writeString(overview);
         dest.writeString(releaseDate);
-    }}
+        dest.writeList(videos);
+    }
+}

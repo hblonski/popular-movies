@@ -11,7 +11,7 @@ import com.popularmovies.MainActivity;
 import com.popularmovies.MovieDetailsFragment;
 import com.popularmovies.R;
 import com.popularmovies.model.Movie;
-import com.popularmovies.network.MovieController;
+import com.popularmovies.network.themoviedb.MoviesController;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -56,7 +56,7 @@ public class MovieListAdapter extends BaseAdapter {
         }
         ImageView imageViewPoster = convertView.findViewById(R.id.image_view_poster);
         final Movie viewMovie = movieList.get(position);
-        MovieController.loadMoviePoster(convertView, imageViewPoster, viewMovie.getPosterPath());
+        MoviesController.loadMoviePoster(convertView, imageViewPoster, viewMovie.getPosterPath());
         imageViewPoster.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {

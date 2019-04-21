@@ -1,4 +1,4 @@
-package com.popularmovies.network;
+package com.popularmovies.network.themoviedb;
 
 public enum MovieListSortOrder {
     POPULAR,
