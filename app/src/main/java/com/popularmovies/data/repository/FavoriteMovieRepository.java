@@ -23,16 +23,20 @@ public class FavoriteMovieRepository {
     }
 
     public void insert(FavoriteMovie favoriteMovie) {
-        new InsertAsyncTask(favoriteMovieDAO).doInBackground(favoriteMovie);
+        new InsertAsyncTask(favoriteMovieDAO).execute(favoriteMovie);
     }
 
     public void delete(FavoriteMovie favoriteMovie) {
-        new DeleteAsyncTask(favoriteMovieDAO).doInBackground(favoriteMovie);
+        new DeleteAsyncTask(favoriteMovieDAO).execute(favoriteMovie);
     }
 
     public LiveData<List<FavoriteMovie>> findAll() {
         favoriteMovies = favoriteMovieDAO.findAll();
         return favoriteMovies;
+    }
+
+    public LiveData<FavoriteMovie> findByMovieId(String movieId) {
+        return favoriteMovieDAO.findByMovieId(movieId);
     }
 
     private static class InsertAsyncTask extends AsyncTask<FavoriteMovie, Void, Void> {

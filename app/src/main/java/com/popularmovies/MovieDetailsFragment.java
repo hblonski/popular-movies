@@ -1,6 +1,5 @@
 package com.popularmovies;
 
-import android.animation.ValueAnimator;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -10,17 +9,26 @@ import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
+import androidx.lifecycle.Observer;
+import androidx.lifecycle.ViewModelProviders;
 
 import com.airbnb.lottie.LottieAnimationView;
+import com.popularmovies.data.entity.FavoriteMovie;
+import com.popularmovies.data.viewmodel.FavoriteMovieViewModel;
 import com.popularmovies.model.Movie;
 import com.popularmovies.network.MovieController;
+import com.popularmovies.util.LottieHelper;
 
 
 public class MovieDetailsFragment extends Fragment {
 
     private static final String ARG_MOVIE = "movie";
 
+    private FavoriteMovieViewModel favoriteMovieViewModel;
+
     private Movie movie;
+
+    private FavoriteMovie favoriteMovie = null;
 
     /**
      * Use this factory method to createFragment a new instance of
@@ -44,6 +52,7 @@ public class MovieDetailsFragment extends Fragment {
         if (arguments != null) {
             movie = arguments.getParcelable(ARG_MOVIE);
         }
+        favoriteMovieViewModel = ViewModelProviders.of(this).get(FavoriteMovieViewModel.class);
     }
 
     @Override
@@ -58,31 +67,36 @@ public class MovieDetailsFragment extends Fragment {
         ((TextView) fragmentView.findViewById(R.id.d_movie_overview)).setText(movie.getOverview());
         ((TextView) fragmentView.findViewById(R.id.d_movie_release_date)).setText(movie.getReleaseDate());
         ((TextView) fragmentView.findViewById(R.id.d_user_score)).setText(String.format("%s/10", movie.getVoteAverage().toString()));
-        final LottieAnimationView animationView = fragmentView.findViewById(R.id.d_favorite_button);
-        animationView.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                startFavoriteButtonAnimation(animationView);
-            }
-        });
+
+        setupFavoriteButton(fragmentView);
 
         return fragmentView;
     }
 
-    //As seen on https://medium.com/@daniel.nesfeder/android-animations-with-lottie-d4aa5a5f237
-    private void startFavoriteButtonAnimation(final LottieAnimationView animationView) {
-        ValueAnimator animator = ValueAnimator.ofFloat(0f, 1f).setDuration(1000);
-        animator.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
+    private void setupFavoriteButton(View fragmentView) {
+        final LottieAnimationView animationView = fragmentView.findViewById(R.id.d_favorite_button);
+        favoriteMovieViewModel.findByMovieId(movie.getId()).observe(MovieDetailsFragment.this, new Observer<FavoriteMovie>() {
             @Override
-            public void onAnimationUpdate(ValueAnimator valueAnimator) {
-                animationView.setProgress((Float) valueAnimator.getAnimatedValue());
+            public void onChanged(FavoriteMovie favoriteMovie) {
+                MovieDetailsFragment.this.favoriteMovie = favoriteMovie;
+                if (favoriteMovie != null) {
+                    //Sets the initial state to "filled star" if the movie is already marked as favorite
+                    animationView.setProgress(LottieHelper.PROGRESS_END);
+                }
             }
         });
 
-        if (animationView.getProgress() == 0f) {
-            animator.start();
-        } else {
-            animationView.setProgress(0f);
-        }
+        animationView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (favoriteMovie == null) {
+                    favoriteMovie = new FavoriteMovie(movie.getId(), movie.getTitle());
+                    favoriteMovieViewModel.insert(favoriteMovie);
+                } else {
+                    favoriteMovieViewModel.delete(favoriteMovie);
+                }
+                LottieHelper.startAnimation(animationView);
+            }
+        });
     }
 }
