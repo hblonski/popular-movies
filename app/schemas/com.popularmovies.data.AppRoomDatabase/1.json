@@ -1,0 +1,39 @@
+{
+  "formatVersion": 1,
+  "database": {
+    "version": 1,
+    "identityHash": "40f3200fc56865c2195531e1d6e8ae20",
+    "entities": [
+      {
+        "tableName": "favorite_movie",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`fmv_id` TEXT NOT NULL, `fmv_title` TEXT NOT NULL, PRIMARY KEY(`fmv_id`))",
+        "fields": [
+          {
+            "fieldPath": "movieId",
+            "columnName": "fmv_id",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "movieTitle",
+            "columnName": "fmv_title",
+            "affinity": "TEXT",
+            "notNull": true
+          }
+        ],
+        "primaryKey": {
+          "columnNames": [
+            "fmv_id"
+          ],
+          "autoGenerate": false
+        },
+        "indices": [],
+        "foreignKeys": []
+      }
+    ],
+    "setupQueries": [
+      "CREATE TABLE IF NOT EXISTS room_master_table (id INTEGER PRIMARY KEY,identity_hash TEXT)",
+      "INSERT OR REPLACE INTO room_master_table (id,identity_hash) VALUES(42, \"40f3200fc56865c2195531e1d6e8ae20\")"
+    ]
+  }
+}
