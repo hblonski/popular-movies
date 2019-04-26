@@ -45,15 +45,16 @@
                 app:layout_constraintTop_toTopOf="parent"
                 app:layout_constraintVertical_bias="0.0" />
 
-            <ImageButton
+            <com.airbnb.lottie.LottieAnimationView
                 android:id="@+id/d_favorite_button"
-                android:layout_width="40dp"
-                android:layout_height="40dp"
-                android:layout_marginEnd="20dp"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginEnd="15dp"
                 android:background="@android:color/transparent"
                 android:contentDescription="@string/favorite_button"
                 android:scaleType="fitXY"
-                android:src="@drawable/ic_star_filled_24dp"
+                app:lottie_fileName="favorite_app_button_animation.json"
+                app:lottie_scale="2"
                 app:layout_constraintBottom_toBottomOf="@+id/d_movie_title"
                 app:layout_constraintEnd_toEndOf="@+id/d_title_background"
                 app:layout_constraintTop_toTopOf="@+id/d_movie_title" />
