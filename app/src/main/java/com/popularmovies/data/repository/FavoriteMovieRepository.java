@@ -1,8 +1,9 @@
 package com.popularmovies.data.repository;
 
 import android.app.Application;
-import android.arch.lifecycle.LiveData;
 import android.os.AsyncTask;
+
+import androidx.lifecycle.LiveData;
 
 import com.popularmovies.data.AppRoomDatabase;
 import com.popularmovies.data.dao.FavoriteMovieDAO;
