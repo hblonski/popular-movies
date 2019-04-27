@@ -4,7 +4,6 @@
     android:id="@+id/activity_main_frameLayout"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@android:color/white"
     tools:context=".MainActivity">
 
     <GridView
@@ -17,7 +16,7 @@
         android:columnWidth="130dp"
         android:horizontalSpacing="10dp"
         android:verticalSpacing="10dp"
-        android:layout_margin="10dp"></GridView>
+        android:layout_margin="10dp"/>
 
     <TextView
         android:id="@+id/label_no_results"

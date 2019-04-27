@@ -4,8 +4,10 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.room.ColumnInfo;
 import androidx.room.Entity;
+import androidx.room.Ignore;
 import androidx.room.PrimaryKey;
 
+@SuppressWarnings({"unused", "NullableProblems"})
 @Entity(tableName = "favorite_movie")
 public class FavoriteMovie {
 
@@ -13,7 +15,8 @@ public class FavoriteMovie {
         //Empty constructor
     }
 
-    public FavoriteMovie(@NonNull String movieId, @NonNull String movieTitle) {
+    @Ignore
+    public FavoriteMovie(@NonNull Integer movieId, @NonNull String movieTitle) {
         this.movieId = movieId;
         this.movieTitle = movieTitle;
     }
@@ -21,18 +24,18 @@ public class FavoriteMovie {
     @PrimaryKey
     @NonNull
     @ColumnInfo(name = "fmv_id")
-    private String movieId;
+    private Integer movieId;
 
     @ColumnInfo(name = "fmv_title")
     @NonNull
     private String movieTitle;
 
     @NonNull
-    public String getMovieId() {
+    public Integer getMovieId() {
         return movieId;
     }
 
-    public void setMovieId(@NonNull String movieId) {
+    public void setMovieId(@NonNull Integer movieId) {
         this.movieId = movieId;
     }
 
@@ -47,7 +50,7 @@ public class FavoriteMovie {
 
     @Override
     public boolean equals(@Nullable Object obj) {
-        if (obj != null && obj instanceof FavoriteMovie){
+        if (obj instanceof FavoriteMovie){
             return ((FavoriteMovie) obj).getMovieId().equals(movieId);
         }
         return false;

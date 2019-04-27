@@ -23,5 +23,5 @@ public interface FavoriteMovieDAO {
     LiveData<List<FavoriteMovie>> findAll();
 
     @Query("SELECT * FROM favorite_movie WHERE fmv_id = :movieId")
-    LiveData<FavoriteMovie> findByMovieId(String movieId);
+    LiveData<FavoriteMovie> findByMovieId(Integer movieId);
 }

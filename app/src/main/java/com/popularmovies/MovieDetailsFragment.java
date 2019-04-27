@@ -6,9 +6,18 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
+import androidx.annotation.NonNull;
+import androidx.fragment.app.Fragment;
+import androidx.lifecycle.ViewModelProviders;
+
+import com.airbnb.lottie.LottieAnimationView;
+import com.google.android.youtube.player.YouTubePlayerSupportFragment;
+import com.popularmovies.data.entity.FavoriteMovie;
+import com.popularmovies.data.viewmodel.FavoriteMovieViewModel;
 import com.popularmovies.model.Movie;
 import com.popularmovies.network.themoviedb.MoviesController;
 import com.popularmovies.network.youtube.YouTubeController;
+import com.popularmovies.util.LottieHelper;
 
 
 public class MovieDetailsFragment extends Fragment {
@@ -61,7 +70,8 @@ public class MovieDetailsFragment extends Fragment {
 
         setupFavoriteButton(fragmentView);
 
-        YouTubePlayerSupportFragment youTubePlayerSupportFragment = (YouTubePlayerSupportFragment)
+        YouTubePlayerSupportFragment youTubePlayerSupportFragment;
+        youTubePlayerSupportFragment = (YouTubePlayerSupportFragment)
                 getChildFragmentManager().findFragmentById(R.id.youtube_player_fragment);
         YouTubeController.initializeYouTubeVideoPlayer(youTubePlayerSupportFragment, "TODO");
 
@@ -70,28 +80,22 @@ public class MovieDetailsFragment extends Fragment {
 
     private void setupFavoriteButton(View fragmentView) {
         final LottieAnimationView animationView = fragmentView.findViewById(R.id.d_favorite_button);
-        favoriteMovieViewModel.findByMovieId(movie.getId()).observe(MovieDetailsFragment.this, new Observer<FavoriteMovie>() {
-            @Override
-            public void onChanged(FavoriteMovie favoriteMovie) {
-                MovieDetailsFragment.this.favoriteMovie = favoriteMovie;
-                if (favoriteMovie != null) {
-                    //Sets the initial state to "filled star" if the movie is already marked as favorite
-                    animationView.setProgress(LottieHelper.PROGRESS_END);
-                }
+        favoriteMovieViewModel.findByMovieId(movie.getId()).observe(MovieDetailsFragment.this, favoriteMovie -> {
+            MovieDetailsFragment.this.favoriteMovie = favoriteMovie;
+            if (favoriteMovie != null) {
+                //Sets the initial state to "filled star" if the movie is already marked as favorite
+                animationView.setProgress(LottieHelper.PROGRESS_END);
             }
         });
 
-        animationView.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                if (favoriteMovie == null) {
-                    favoriteMovie = new FavoriteMovie(movie.getId(), movie.getTitle());
-                    favoriteMovieViewModel.insert(favoriteMovie);
-                } else {
-                    favoriteMovieViewModel.delete(favoriteMovie);
-                }
-                LottieHelper.startAnimation(animationView);
+        animationView.setOnClickListener(v -> {
+            if (favoriteMovie == null) {
+                favoriteMovie = new FavoriteMovie(movie.getId(), movie.getTitle());
+                favoriteMovieViewModel.insert(favoriteMovie);
+            } else {
+                favoriteMovieViewModel.delete(favoriteMovie);
             }
+            LottieHelper.startAnimation(animationView);
         });
     }
 }

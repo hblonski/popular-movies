@@ -37,6 +37,7 @@ public class VideosController implements Callback<VideosResultPage> {
         });
     }
 
+    @SuppressWarnings("ConstantConditions")
     @Override
     public void onResponse(Call<VideosResultPage> call, Response<VideosResultPage> response) {
         if (response.code() == HttpURLConnection.HTTP_OK) {

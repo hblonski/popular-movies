@@ -14,6 +14,7 @@ import java.util.List;
  * Movie class. Some getters and setters, as well as the empty public constructor, despite being
  * flagged as "never used" by Android Studio, are required by the Jackson Converter.
  * */
+@SuppressWarnings("unused")
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class Movie implements Parcelable {
 
@@ -107,6 +108,7 @@ public class Movie implements Parcelable {
 
     //Constructor that takes a Parcel and gives you an object populated with it's values. The order
     //must be the same used in the writeToParcel method (see below).
+    @SuppressWarnings("unchecked")
     private Movie(Parcel in) {
         id = in.readInt();
         voteAverage = in.readDouble();

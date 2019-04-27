@@ -12,19 +12,14 @@ import android.widget.GridView;
 import android.widget.Spinner;
 import android.widget.TextView;
 
-import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentTransaction;
-import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProviders;
 
 import com.popularmovies.adapter.MovieListAdapter;
-import com.popularmovies.model.Movie;
-import com.popularmovies.network.themoviedb.MoviesController;
 import com.popularmovies.network.themoviedb.MovieListSortOrder;
-
-import java.util.List;
+import com.popularmovies.network.themoviedb.MoviesController;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -34,8 +29,6 @@ public class MainActivity extends AppCompatActivity {
 
     private MovieListSortOrder currentSortOrder;
 
-    private GridView moviesGridView;
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -43,7 +36,7 @@ public class MainActivity extends AppCompatActivity {
 
         moviesController = ViewModelProviders.of(this).get(MoviesController.class);
 
-        moviesGridView = findViewById(R.id.movies_grid_view);
+        GridView moviesGridView = findViewById(R.id.movies_grid_view);
         final MovieListAdapter movieListAdapter = new MovieListAdapter(this);
         moviesGridView.setAdapter(movieListAdapter);
 
@@ -69,12 +62,9 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void observeDataChange(final MovieListAdapter movieListAdapter) {
-        moviesController.getMoviesList().observe(this, new Observer<List<Movie>>() {
-            @Override
-            public void onChanged(@Nullable List<Movie> movies) {
-                movieListAdapter.setMovieList(movies);
-                handleNoResultsLoaded(movies != null ? movies.size() : 0);
-            }
+        moviesController.getMoviesList().observe(this, movies -> {
+            movieListAdapter.setMovieList(movies);
+            handleNoResultsLoaded(movies != null ? movies.size() : 0);
         });
     }
 

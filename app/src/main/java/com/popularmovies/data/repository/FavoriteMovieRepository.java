@@ -15,6 +15,7 @@ public class FavoriteMovieRepository {
 
     private FavoriteMovieDAO favoriteMovieDAO;
 
+    @SuppressWarnings("FieldCanBeLocal")
     private LiveData<List<FavoriteMovie>> favoriteMovies;
 
     public FavoriteMovieRepository(Application application) {
@@ -35,7 +36,7 @@ public class FavoriteMovieRepository {
         return favoriteMovies;
     }
 
-    public LiveData<FavoriteMovie> findByMovieId(String movieId) {
+    public LiveData<FavoriteMovie> findByMovieId(Integer movieId) {
         return favoriteMovieDAO.findByMovieId(movieId);
     }
 

@@ -71,6 +71,7 @@ public class MoviesController extends AndroidViewModel implements Callback<Movie
         call.enqueue(this);
     }
 
+    @SuppressWarnings("ConstantConditions")
     @Override
     public void onResponse(Call<MoviesResultPage> call, Response<MoviesResultPage> response) {
         if (response.code() == HttpURLConnection.HTTP_OK) {
@@ -91,7 +92,7 @@ public class MoviesController extends AndroidViewModel implements Callback<Movie
 
     @Override
     public void onFailure(Call<MoviesResultPage> call, Throwable t) {
-        moviesList.setValue(Collections.<Movie>emptyList());
+        moviesList.setValue(Collections.emptyList());
         loading = false;
     }
 

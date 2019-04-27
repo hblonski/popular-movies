@@ -16,12 +16,7 @@ public abstract class LottieHelper {
     //As seen on https://medium.com/@daniel.nesfeder/android-animations-with-lottie-d4aa5a5f237
     public static void startAnimation(final LottieAnimationView animationView) {
         ValueAnimator animator = ValueAnimator.ofFloat(PROGRESS_START, PROGRESS_END).setDuration(DEFAULT_DURATION);
-        animator.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
-            @Override
-            public void onAnimationUpdate(ValueAnimator valueAnimator) {
-                animationView.setProgress((Float) valueAnimator.getAnimatedValue());
-            }
-        });
+        animator.addUpdateListener(valueAnimator -> animationView.setProgress((Float) valueAnimator.getAnimatedValue()));
 
         if (animationView.getProgress() == PROGRESS_START) {
             animator.start();
