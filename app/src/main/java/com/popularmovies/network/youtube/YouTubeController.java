@@ -3,23 +3,25 @@ package com.popularmovies.network.youtube;
 import android.view.View;
 import android.widget.ImageView;
 
-import com.bumptech.glide.Glide;
 import com.google.android.youtube.player.YouTubeInitializationResult;
 import com.google.android.youtube.player.YouTubePlayer;
 import com.google.android.youtube.player.YouTubePlayerSupportFragment;
-import com.popularmovies.R;
+import com.popularmovies.network.glide.GlideHelper;
 
 import java.security.InvalidParameterException;
 
-public abstract class YouTubeController {
+public class YouTubeController {
 
     //Replace the value with your YouTube api key
     private static final String YOUTUBE_API_KEY = "";
 
     private static final String THUMBNAIL_BASE_URL = "https://img.youtube.com/vi/%s/0.jpg";
 
-    public static void initializeYouTubeVideoPlayer(YouTubePlayerSupportFragment youTubePlayerSupportFragment,
-                                                    final String videoId) {
+    private YouTubePlayer youTubePlayer;
+
+    public void initializeYouTubeVideoPlayer(YouTubePlayerSupportFragment youTubePlayerSupportFragment,
+                                             String trailerURL) {
+
         if (youTubePlayerSupportFragment == null) {
             throw new InvalidParameterException("Fragment should not be null.");
         }
@@ -28,7 +30,8 @@ public abstract class YouTubeController {
                     @Override
                     public void onInitializationSuccess(YouTubePlayer.Provider provider,
                                                         YouTubePlayer youTubePlayer, boolean b) {
-                        youTubePlayer.cueVideo(videoId);
+                        YouTubeController.this.youTubePlayer = youTubePlayer;
+                        youTubePlayer.cueVideo(trailerURL);
                     }
 
                     @Override
@@ -39,10 +42,14 @@ public abstract class YouTubeController {
                 });
     }
 
+    public YouTubePlayer getYouTubePlayer() {
+        return youTubePlayer;
+    }
+
     public static void loadMoviePoster(View view, final ImageView imageView, String videoKey) {
-        Glide.with(view)
-                .load(String.format(THUMBNAIL_BASE_URL, videoKey))
-                .error(R.drawable.load_poster_error_image)
-                .into(imageView);
+        GlideHelper.loadImageIntoImageView(view,
+                imageView,
+                String.format(THUMBNAIL_BASE_URL, videoKey),
+                null);
     }
 }

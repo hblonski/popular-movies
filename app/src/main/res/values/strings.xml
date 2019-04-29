@@ -11,5 +11,6 @@
     <string name="movie_poster">Movie poster</string>
     <string name="favorite_button">Favorite button</string>
     <string name="movie_title">Movie title</string>
+    <string name="trailers">Trailers</string>
 
 </resources>

@@ -8,6 +8,7 @@ import android.widget.ImageView;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.RecyclerViewClickListener;
 import com.popularmovies.R;
 import com.popularmovies.network.youtube.YouTubeController;
 
@@ -18,8 +19,13 @@ public class TrailerListAdapter extends RecyclerView.Adapter {
     //Contains the YouTube video keys
     private List<String> trailerList;
 
-    public TrailerListAdapter(List<String> trailerList) {
+    private int selectedTrailer = 0;
+
+    private RecyclerViewClickListener recyclerViewClickListener;
+
+    public TrailerListAdapter(List<String> trailerList, RecyclerViewClickListener recyclerViewClickListener) {
         this.trailerList = trailerList;
+        this.recyclerViewClickListener = recyclerViewClickListener;
     }
 
     class TrailerViewHolder extends RecyclerView.ViewHolder {
@@ -48,9 +54,26 @@ public class TrailerListAdapter extends RecyclerView.Adapter {
     public void onBindViewHolder(@NonNull RecyclerView.ViewHolder holder, int position) {
         if (trailerList != null) {
             String trailerKey = trailerList.get(position);
+            TrailerViewHolder trailerViewHolder = (TrailerViewHolder) holder;
             YouTubeController.loadMoviePoster(holder.itemView,
-                    ((TrailerViewHolder) holder).thumbnailImageView,
+                    trailerViewHolder.thumbnailImageView,
                     trailerKey);
+
+            //All the thumbnails have the "Play" icon, except the one selected (this one will have
+            // the "Pause" icon). When a trailer is selected, the states must change to reflect
+            // the new trailer being focused.
+            if (selectedTrailer == position) {
+                trailerViewHolder.playButtonImageView.setImageResource(R.drawable.ic_pause_circle_24dp);
+            } else {
+                trailerViewHolder.playButtonImageView.setImageResource(R.drawable.ic_play_circle_24dp);
+            }
+
+            holder.itemView.setOnClickListener(v -> {
+                notifyItemChanged(selectedTrailer);
+                selectedTrailer = position;
+                notifyItemChanged(selectedTrailer);
+                recyclerViewClickListener.onItemClicked(selectedTrailer);
+            });
         }
     }
 

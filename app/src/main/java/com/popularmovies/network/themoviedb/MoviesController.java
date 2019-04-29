@@ -8,10 +8,10 @@ import androidx.annotation.NonNull;
 import androidx.lifecycle.AndroidViewModel;
 import androidx.lifecycle.MutableLiveData;
 
-import com.bumptech.glide.Glide;
 import com.popularmovies.R;
 import com.popularmovies.model.Movie;
 import com.popularmovies.model.MoviesResultPage;
+import com.popularmovies.network.glide.GlideHelper;
 import com.popularmovies.util.RetrofitServiceGenerator;
 
 import java.net.HttpURLConnection;
@@ -101,10 +101,10 @@ public class MoviesController extends AndroidViewModel implements Callback<Movie
     }
 
     public static void loadMoviePoster(View view, final ImageView imageView, String posterPath) {
-        Glide.with(view)
-                .load(buildPosterURL(posterPath))
-                .error(R.drawable.load_poster_error_image)
-                .into(imageView);
+        GlideHelper.loadImageIntoImageView(view,
+                imageView,
+                buildPosterURL(posterPath),
+                R.drawable.load_poster_error_image);
     }
 
     public boolean isLoading() {
