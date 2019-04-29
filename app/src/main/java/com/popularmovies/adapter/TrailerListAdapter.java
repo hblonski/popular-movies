@@ -14,7 +14,7 @@ import com.popularmovies.network.youtube.YouTubeController;
 
 import java.util.List;
 
-public class TrailerListAdapter extends RecyclerView.Adapter {
+public class TrailerListAdapter extends RecyclerView.Adapter<TrailerListAdapter.TrailerViewHolder> {
 
     //Contains the YouTube video keys
     private List<String> trailerList;
@@ -43,29 +43,28 @@ public class TrailerListAdapter extends RecyclerView.Adapter {
 
     @NonNull
     @Override
-    public RecyclerView.ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
+    public TrailerViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         View itemView = LayoutInflater
                 .from(parent.getContext())
-                .inflate(R.layout.trailer_card, parent, false);
+                .inflate(R.layout.card_trailer, parent, false);
         return new TrailerViewHolder(itemView);
     }
 
     @Override
-    public void onBindViewHolder(@NonNull RecyclerView.ViewHolder holder, int position) {
+    public void onBindViewHolder(@NonNull TrailerViewHolder holder, int position) {
         if (trailerList != null) {
             String trailerKey = trailerList.get(position);
-            TrailerViewHolder trailerViewHolder = (TrailerViewHolder) holder;
             YouTubeController.loadMoviePoster(holder.itemView,
-                    trailerViewHolder.thumbnailImageView,
+                    holder.thumbnailImageView,
                     trailerKey);
 
             //All the thumbnails have the "Play" icon, except the one selected (this one will have
             // the "Pause" icon). When a trailer is selected, the states must change to reflect
             // the new trailer being focused.
             if (selectedTrailer == position) {
-                trailerViewHolder.playButtonImageView.setImageResource(R.drawable.ic_pause_circle_24dp);
+                holder.playButtonImageView.setImageResource(R.drawable.ic_pause_circle_24dp);
             } else {
-                trailerViewHolder.playButtonImageView.setImageResource(R.drawable.ic_play_circle_24dp);
+                holder.playButtonImageView.setImageResource(R.drawable.ic_play_circle_24dp);
             }
 
             holder.itemView.setOnClickListener(v -> {

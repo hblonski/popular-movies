@@ -1,4 +1,4 @@
-package com.popularmovies.model;
+package com.popularmovies.network.themoviedb.model;
 
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
@@ -11,7 +11,7 @@ import java.util.List;
 public class VideosResultPage {
 
     @JsonProperty("id")
-    private Integer id;
+    private Integer movieId;
 
     @JsonProperty("results")
     private List<Video> videos;
@@ -24,11 +24,11 @@ public class VideosResultPage {
         this.videos = videos;
     }
 
-    public Integer getId() {
-        return this.id;
+    public Integer getMovieId() {
+        return this.movieId;
     }
 
-    public void setId(Integer id) {
-        this.id = id;
+    public void setMovieId(Integer movieId) {
+        this.movieId = movieId;
     }
 }

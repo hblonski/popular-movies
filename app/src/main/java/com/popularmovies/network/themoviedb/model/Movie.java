@@ -1,4 +1,4 @@
-package com.popularmovies.model;
+package com.popularmovies.network.themoviedb.model;
 
 import android.os.Parcel;
 import android.os.Parcelable;
@@ -41,6 +41,8 @@ public class Movie implements Parcelable {
     private String releaseDate;
 
     private List<Video> videos;
+
+    private List<Review> reviews;
 
     public Integer getId() {
         return id;
@@ -101,6 +103,14 @@ public class Movie implements Parcelable {
 
     public void setVideos(List<Video> videos) {
         this.videos = videos;
+    }
+
+    public List<Review> getReviews() {
+        return reviews;
+    }
+
+    public void setReviews(List<Review> reviews) {
+        this.reviews = reviews;
     }
 
     //Parcelable interface methods implementation. This interface is used to allow a Movie object

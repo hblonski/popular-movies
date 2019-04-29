@@ -9,8 +9,8 @@ import androidx.lifecycle.AndroidViewModel;
 import androidx.lifecycle.MutableLiveData;
 
 import com.popularmovies.R;
-import com.popularmovies.model.Movie;
-import com.popularmovies.model.MoviesResultPage;
+import com.popularmovies.network.themoviedb.model.Movie;
+import com.popularmovies.network.themoviedb.model.MoviesResultPage;
 import com.popularmovies.network.glide.GlideHelper;
 import com.popularmovies.util.RetrofitServiceGenerator;
 
@@ -86,6 +86,7 @@ public class MoviesController extends AndroidViewModel implements Callback<Movie
                 moviesList.setValue(moviesResultPage.getResults());
             }
             new VideosController(moviesList.getValue()).fetchMoviesVideos();
+            new ReviewsController(moviesList.getValue()).fetchMoviesReviews();
         }
         loading = false;
     }

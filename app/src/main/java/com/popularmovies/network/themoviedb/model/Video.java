@@ -1,4 +1,4 @@
-package com.popularmovies.model;
+package com.popularmovies.network.themoviedb.model;
 
 import android.os.Parcel;
 import android.os.Parcelable;
@@ -12,7 +12,7 @@ import com.fasterxml.jackson.annotation.JsonProperty;
  * */
 @SuppressWarnings("unused")
 @JsonIgnoreProperties(ignoreUnknown = true)
-public class Video implements Parcelable {
+public class Video {
 
     public Video() {
         //Empty constructor
@@ -61,36 +61,4 @@ public class Video implements Parcelable {
     public void setType(String type) {
         this.type = type;
     }
-
-    @Override
-    public int describeContents() {
-        return 0;
-    }
-
-    @Override
-    public void writeToParcel(Parcel parcel, int i) {
-        parcel.writeString(id);
-        parcel.writeString(key);
-        parcel.writeString(site);
-        parcel.writeString(type);
-    }
-
-    protected Video(Parcel in) {
-        id = in.readString();
-        key = in.readString();
-        site = in.readString();
-        type = in.readString();
-    }
-
-    public static final Creator<Video> CREATOR = new Creator<Video>() {
-        @Override
-        public Video createFromParcel(Parcel in) {
-            return new Video(in);
-        }
-
-        @Override
-        public Video[] newArray(int size) {
-            return new Video[size];
-        }
-    };
 }

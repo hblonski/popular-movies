@@ -1,7 +1,7 @@
 package com.popularmovies.network.themoviedb;
 
 import com.popularmovies.network.themoviedb.model.Movie;
-import com.popularmovies.network.themoviedb.model.VideosResultPage;
+import com.popularmovies.network.themoviedb.model.ReviewsResultPage;
 import com.popularmovies.util.RetrofitServiceGenerator;
 
 import java.net.HttpURLConnection;
@@ -12,48 +12,47 @@ import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 
-public class VideosController implements Callback<VideosResultPage> {
+public class ReviewsController implements Callback<ReviewsResultPage> {
 
     private MoviesApiClient moviesApiClient;
 
     private List<Movie> movies;
 
-    public VideosController(List<Movie> movies) {
+    public ReviewsController(List<Movie> movies) {
         moviesApiClient = RetrofitServiceGenerator
                 .generateService(MoviesApiClient.BASE_URL, MoviesApiClient.class);
         this.movies = movies;
     }
 
-    public void fetchMoviesVideos() {
+    public void fetchMoviesReviews() {
         if (movies == null) {
             throw new InvalidParameterException("Movie list should not be null.");
         }
 
         movies.forEach(movie -> {
             if (movie.getVideos() == null || movie.getVideos().isEmpty()) {
-                Call<VideosResultPage> call = moviesApiClient.getMovieVideos(movie.getId(), MoviesApiClient.API_KEY);
+                Call<ReviewsResultPage> call = moviesApiClient.getMovieReviews(movie.getId(), MoviesApiClient.API_KEY);
                 call.enqueue(this);
             }
         });
     }
 
-    @SuppressWarnings("ConstantConditions")
     @Override
-    public void onResponse(Call<VideosResultPage> call, Response<VideosResultPage> response) {
+    public void onResponse(Call<ReviewsResultPage> call, Response<ReviewsResultPage> response) {
         if (response.code() == HttpURLConnection.HTTP_OK) {
-            VideosResultPage resultPage = response.body();
+            ReviewsResultPage resultPage = response.body();
             Integer movieId = resultPage.getMovieId();
             Movie movie = movies
                     .stream()
                     .filter(m -> m.getId().equals(movieId))
                     .findFirst()
                     .orElse(null);
-            movie.setVideos(resultPage.getVideos());
+            movie.setReviews(resultPage.getReviews());
         }
     }
 
     @Override
-    public void onFailure(Call<VideosResultPage> call, Throwable t) {
+    public void onFailure(Call<ReviewsResultPage> call, Throwable t) {
         //Empty
     }
 }

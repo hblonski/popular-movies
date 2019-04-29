@@ -1,5 +1,8 @@
 package com.popularmovies.util;
 
+import java.util.HashMap;
+import java.util.Map;
+
 import retrofit2.Retrofit;
 import retrofit2.converter.jackson.JacksonConverterFactory;
 
@@ -8,11 +11,21 @@ import retrofit2.converter.jackson.JacksonConverterFactory;
  * */
 public abstract class RetrofitServiceGenerator {
 
+    private final static Map<Class, Object> services = new HashMap<>();
+
     public static <T> T generateService(String baseUrl, Class<T> serviceClass) {
-        return new Retrofit.Builder()
+
+        if (services.containsKey(serviceClass)) {
+            //noinspection unchecked
+            return (T) services.get(serviceClass);
+        }
+
+        T service = new Retrofit.Builder()
                 .baseUrl(baseUrl)
                 .addConverterFactory(JacksonConverterFactory.create())
                 .build()
                 .create(serviceClass);
+        services.put(serviceClass, service);
+        return service;
     }
 }

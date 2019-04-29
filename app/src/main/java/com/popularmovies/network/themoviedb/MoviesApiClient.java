@@ -1,7 +1,8 @@
 package com.popularmovies.network.themoviedb;
 
-import com.popularmovies.model.MoviesResultPage;
-import com.popularmovies.model.VideosResultPage;
+import com.popularmovies.network.themoviedb.model.MoviesResultPage;
+import com.popularmovies.network.themoviedb.model.ReviewsResultPage;
+import com.popularmovies.network.themoviedb.model.VideosResultPage;
 
 import retrofit2.Call;
 import retrofit2.http.GET;
@@ -29,4 +30,7 @@ public interface MoviesApiClient {
 
     @GET("movie/{movie_id}/videos")
     Call<VideosResultPage> getMovieVideos(@Path("movie_id") Integer movieId, @Query("api_key") String apiKey);
+
+    @GET("movie/{movie_id}/reviews")
+    Call<ReviewsResultPage> getMovieReviews(@Path("movie_id") Integer movieId, @Query("api_key") String apiKey);
 }

@@ -10,7 +10,7 @@ import android.widget.ImageView;
 import com.popularmovies.MainActivity;
 import com.popularmovies.MovieDetailsFragment;
 import com.popularmovies.R;
-import com.popularmovies.model.Movie;
+import com.popularmovies.network.themoviedb.model.Movie;
 import com.popularmovies.network.themoviedb.MoviesController;
 
 import java.util.ArrayList;
@@ -52,7 +52,7 @@ public class MovieListAdapter extends BaseAdapter {
     public View getView(int position, View convertView, ViewGroup parent) {
 
         if (convertView == null) {
-            convertView = LayoutInflater.from(context).inflate(R.layout.movie_card, parent, false);
+            convertView = LayoutInflater.from(context).inflate(R.layout.card_movie, parent, false);
         }
         ImageView imageViewPoster = convertView.findViewById(R.id.image_view_poster);
         final Movie viewMovie = movieList.get(position);

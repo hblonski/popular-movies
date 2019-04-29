@@ -1,4 +1,4 @@
-package com.popularmovies.model;
+package com.popularmovies.network.themoviedb.model;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 

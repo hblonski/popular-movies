@@ -21,7 +21,7 @@ public abstract class LottieHelper {
         if (animationView.getProgress() == PROGRESS_START) {
             animator.start();
         } else {
-            animationView.setProgress(PROGRESS_END);
+            animationView.setProgress(PROGRESS_START);
         }
     }
 }

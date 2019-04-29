@@ -14,13 +14,13 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.RecyclerViewClickListener;
 import com.airbnb.lottie.LottieAnimationView;
-import com.google.android.youtube.player.YouTubePlayer;
 import com.google.android.youtube.player.YouTubePlayerSupportFragment;
+import com.popularmovies.adapter.ReviewListAdapter;
 import com.popularmovies.adapter.TrailerListAdapter;
 import com.popularmovies.data.entity.FavoriteMovie;
 import com.popularmovies.data.viewmodel.FavoriteMovieViewModel;
-import com.popularmovies.model.Movie;
-import com.popularmovies.model.Video;
+import com.popularmovies.network.themoviedb.model.Movie;
+import com.popularmovies.network.themoviedb.model.Video;
 import com.popularmovies.network.themoviedb.MoviesController;
 import com.popularmovies.network.youtube.YouTubeController;
 import com.popularmovies.util.LottieHelper;
@@ -81,6 +81,7 @@ public class MovieDetailsFragment extends Fragment implements RecyclerViewClickL
         setupMovieInfoViews();
         setupFavoriteButton();
         setupYouTubeVideoPlayer();
+        setupReviewsRecyclerView();
 
         return fragmentView;
     }
@@ -111,7 +112,14 @@ public class MovieDetailsFragment extends Fragment implements RecyclerViewClickL
         RecyclerView trailersRecyclerView = fragmentView.findViewById(R.id.trailers_recycler_view);
         TrailerListAdapter trailerListAdapter = new TrailerListAdapter(youTubeVideoKeys, this);
         trailersRecyclerView.setAdapter(trailerListAdapter);
-        trailersRecyclerView.setLayoutManager(new LinearLayoutManager(this.getContext(), LinearLayoutManager.HORIZONTAL,false));
+        trailersRecyclerView.setLayoutManager(new LinearLayoutManager(this.getContext(), RecyclerView.HORIZONTAL,false));
+    }
+
+    private void setupReviewsRecyclerView() {
+        RecyclerView reviewsRecyclerView = fragmentView.findViewById(R.id.reviews_recycler_view);
+        ReviewListAdapter reviewListAdapter = new ReviewListAdapter(movie.getReviews());
+        reviewsRecyclerView.setAdapter(reviewListAdapter);
+        reviewsRecyclerView.setLayoutManager(new LinearLayoutManager(this.getContext(), RecyclerView.VERTICAL,false));
     }
 
     private void setupYouTubeVideoPlayer() {
