@@ -9,15 +9,22 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProviders;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 
 import com.airbnb.lottie.LottieAnimationView;
 import com.google.android.youtube.player.YouTubePlayerSupportFragment;
+import com.popularmovies.adapter.TrailerListAdapter;
 import com.popularmovies.data.entity.FavoriteMovie;
 import com.popularmovies.data.viewmodel.FavoriteMovieViewModel;
 import com.popularmovies.model.Movie;
+import com.popularmovies.model.Video;
 import com.popularmovies.network.themoviedb.MoviesController;
 import com.popularmovies.network.youtube.YouTubeController;
 import com.popularmovies.util.LottieHelper;
+
+import java.util.List;
+import java.util.stream.Collectors;
 
 
 public class MovieDetailsFragment extends Fragment {
@@ -60,6 +67,14 @@ public class MovieDetailsFragment extends Fragment {
         // Inflate the layout for this fragment
         View fragmentView = inflater.inflate(R.layout.fragment_movie_details, container, false);
 
+        setupMovieInfoViews(fragmentView);
+        setupFavoriteButton(fragmentView);
+        setupYouTubeVideoPlayer(fragmentView);
+
+        return fragmentView;
+    }
+
+    private void setupMovieInfoViews(View fragmentView) {
         MoviesController.loadMoviePoster(fragmentView,
                 fragmentView.findViewById(R.id.d_image_view_poster),
                 movie.getPosterPath());
@@ -67,15 +82,31 @@ public class MovieDetailsFragment extends Fragment {
         ((TextView) fragmentView.findViewById(R.id.d_movie_overview)).setText(movie.getOverview());
         ((TextView) fragmentView.findViewById(R.id.d_movie_release_date)).setText(movie.getReleaseDate());
         ((TextView) fragmentView.findViewById(R.id.d_user_score)).setText(String.format("%s/10", movie.getVoteAverage().toString()));
+    }
 
-        setupFavoriteButton(fragmentView);
+    private void setupYouTubeVideoPlayer(View fragmentView) {
 
-        YouTubePlayerSupportFragment youTubePlayerSupportFragment;
-        youTubePlayerSupportFragment = (YouTubePlayerSupportFragment)
-                getChildFragmentManager().findFragmentById(R.id.youtube_player_fragment);
-        YouTubeController.initializeYouTubeVideoPlayer(youTubePlayerSupportFragment, "TODO");
+        List<Video> trailers = movie.getVideos();
 
-        return fragmentView;
+        if (trailers != null && !trailers.isEmpty()) {
+            List<String> youTubeVideoKeys = trailers
+                    .stream()
+                    .filter(v -> v.getSite().equals("YouTube") && v.getType().equals("Trailer"))
+                    .map(Video::getKey)
+                    .collect(Collectors.toList());
+
+            String firstTrailerURL = !youTubeVideoKeys.isEmpty() ? youTubeVideoKeys.get(0) : "";
+
+            YouTubePlayerSupportFragment youTubePlayerSupportFragment;
+            youTubePlayerSupportFragment = (YouTubePlayerSupportFragment)
+                    getChildFragmentManager().findFragmentById(R.id.youtube_player_fragment);
+            YouTubeController.initializeYouTubeVideoPlayer(youTubePlayerSupportFragment, firstTrailerURL);
+
+            RecyclerView trailersRecyclerView = fragmentView.findViewById(R.id.trailers_recycler_view);
+            TrailerListAdapter trailerListAdapter = new TrailerListAdapter(youTubeVideoKeys);
+            trailersRecyclerView.setAdapter(trailerListAdapter);
+            trailersRecyclerView.setLayoutManager(new LinearLayoutManager(this.getContext(), LinearLayoutManager.HORIZONTAL,false));
+        }
     }
 
     private void setupFavoriteButton(View fragmentView) {
