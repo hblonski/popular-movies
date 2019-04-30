@@ -1,12 +1,14 @@
 package com.popularmovies;
 
 import android.os.Bundle;
+import android.transition.TransitionManager;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
+import androidx.cardview.widget.CardView;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProviders;
 import androidx.recyclerview.widget.LinearLayoutManager;
@@ -20,11 +22,13 @@ import com.popularmovies.adapter.TrailerListAdapter;
 import com.popularmovies.data.entity.FavoriteMovie;
 import com.popularmovies.data.viewmodel.FavoriteMovieViewModel;
 import com.popularmovies.network.themoviedb.model.Movie;
+import com.popularmovies.network.themoviedb.model.Review;
 import com.popularmovies.network.themoviedb.model.Video;
 import com.popularmovies.network.themoviedb.MoviesController;
 import com.popularmovies.network.youtube.YouTubeController;
 import com.popularmovies.util.LottieHelper;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -32,6 +36,9 @@ import java.util.stream.Collectors;
 public class MovieDetailsFragment extends Fragment implements RecyclerViewClickListener {
 
     private static final String ARG_MOVIE = "movie";
+
+    //Number of review cards loaded initially and every time the user clicks the "load more" button
+    private static final int REVIEWS_PAGE_SIZE = 3;
 
     private FavoriteMovieViewModel favoriteMovieViewModel;
 
@@ -44,6 +51,8 @@ public class MovieDetailsFragment extends Fragment implements RecyclerViewClickL
     private List<String> youTubeVideoKeys;
 
     private YouTubeController youTubeController;
+
+    private List<Review> loadedReviews;
 
     /**
      * Use this factory method to createFragment a new instance of
@@ -69,6 +78,7 @@ public class MovieDetailsFragment extends Fragment implements RecyclerViewClickL
         }
         favoriteMovieViewModel = ViewModelProviders.of(this).get(FavoriteMovieViewModel.class);
         youTubeController = new YouTubeController();
+        loadedReviews = new ArrayList<>();
     }
 
     @Override
@@ -116,10 +126,34 @@ public class MovieDetailsFragment extends Fragment implements RecyclerViewClickL
     }
 
     private void setupReviewsRecyclerView() {
-        RecyclerView reviewsRecyclerView = fragmentView.findViewById(R.id.reviews_recycler_view);
-        ReviewListAdapter reviewListAdapter = new ReviewListAdapter(movie.getReviews());
+        RecyclerView reviewsRecyclerView = fragmentView.findViewById(R.id.d_reviews_recycler_view);
+        ReviewListAdapter reviewListAdapter = new ReviewListAdapter();
         reviewsRecyclerView.setAdapter(reviewListAdapter);
         reviewsRecyclerView.setLayoutManager(new LinearLayoutManager(this.getContext(), RecyclerView.VERTICAL,false));
+        loadMoreReviews(reviewsRecyclerView);
+
+        CardView loadMoreButton = fragmentView.findViewById(R.id.d_load_more_reviews_button);
+        loadMoreButton.setOnClickListener(l -> loadMoreReviews(reviewsRecyclerView));
+    }
+
+    private void loadMoreReviews(RecyclerView reviewsRecyclerView) {
+        List<Review> movieReviews = movie.getReviews();
+        if (movieReviews != null && movieReviews.size() != loadedReviews.size()) {
+            int nextToLoad = loadedReviews.size();
+            for (int i = 0; i < REVIEWS_PAGE_SIZE && nextToLoad < movieReviews.size(); i++, nextToLoad++) {
+                loadedReviews.add(movieReviews.get(nextToLoad));
+            }
+            TransitionManager.beginDelayedTransition(reviewsRecyclerView);
+            ((ReviewListAdapter) reviewsRecyclerView.getAdapter()).setReviewList(loadedReviews);
+        }
+        checkForMoreReviews();
+    }
+
+    //Hides the "load more reviews" button if there are no more reviews to be loaded
+    private void checkForMoreReviews() {
+        if (movie.getReviews() != null && loadedReviews.size() == movie.getReviews().size()) {
+            fragmentView.findViewById(R.id.d_load_more_reviews_button).setVisibility(View.GONE);
+        }
     }
 
     private void setupYouTubeVideoPlayer() {

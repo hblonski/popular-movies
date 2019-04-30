@@ -12,6 +12,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.popularmovies.R;
 import com.popularmovies.network.themoviedb.model.Review;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class ReviewListAdapter extends RecyclerView.Adapter<ReviewListAdapter.ReviewViewHolder> {
@@ -20,8 +21,8 @@ public class ReviewListAdapter extends RecyclerView.Adapter<ReviewListAdapter.Re
 
     private RecyclerView recyclerView;
 
-    public ReviewListAdapter(List<Review> reviewList) {
-        this.reviewList = reviewList;
+    public ReviewListAdapter() {
+        this.reviewList = new ArrayList<>();
     }
 
     @NonNull
@@ -56,6 +57,12 @@ public class ReviewListAdapter extends RecyclerView.Adapter<ReviewListAdapter.Re
             }
         });
     }
+    public void setReviewList(List<Review> reviewList) {
+        this.reviewList.clear();
+        this.reviewList.addAll(reviewList);
+        notifyDataSetChanged();
+    }
+
 
     @Override
     public int getItemCount() {

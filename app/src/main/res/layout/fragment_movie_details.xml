@@ -164,12 +164,37 @@
                 app:layout_constraintTop_toBottomOf="@+id/trailers_recycler_view"/>
 
             <androidx.recyclerview.widget.RecyclerView
-                android:id="@+id/reviews_recycler_view"
+                android:id="@+id/d_reviews_recycler_view"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_margin="10dp"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/d_reviews_label"/>
+
+            <androidx.cardview.widget.CardView
+                android:id="@+id/d_load_more_reviews_button"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_margin="20dp"
+                android:layout_marginBottom="8dp"
+                app:cardBackgroundColor="@color/colorPrimary"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/d_reviews_recycler_view">
+
+                <TextView
+                    style="@style/DetailsLabel"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_margin="10dp"
+                    android:text="@string/load_more"
+                    android:textAlignment="center"
+                    android:textColor="@android:color/white"
+                    app:autoSizeMaxTextSize="30sp"
+                    app:autoSizeMinTextSize="12sp"
+                    app:autoSizeStepGranularity="2sp"
+                    app:autoSizeTextType="uniform" />
+            </androidx.cardview.widget.CardView>
 
         </androidx.constraintlayout.widget.ConstraintLayout>
 
