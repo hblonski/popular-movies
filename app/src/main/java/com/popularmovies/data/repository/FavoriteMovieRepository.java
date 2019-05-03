@@ -13,7 +13,7 @@ import java.util.List;
 
 public class FavoriteMovieRepository {
 
-    private FavoriteMovieDAO favoriteMovieDAO;
+    private final FavoriteMovieDAO favoriteMovieDAO;
 
     @SuppressWarnings("FieldCanBeLocal")
     private LiveData<List<FavoriteMovie>> favoriteMovies;
@@ -42,7 +42,7 @@ public class FavoriteMovieRepository {
 
     private static class InsertAsyncTask extends AsyncTask<FavoriteMovie, Void, Void> {
 
-        private FavoriteMovieDAO favoriteMovieDAO;
+        private final FavoriteMovieDAO favoriteMovieDAO;
 
         InsertAsyncTask(FavoriteMovieDAO favoriteMovieDAO) {
             this.favoriteMovieDAO = favoriteMovieDAO;
@@ -56,7 +56,7 @@ public class FavoriteMovieRepository {
     }
     private static class DeleteAsyncTask extends AsyncTask<FavoriteMovie, Void, Void> {
 
-        private FavoriteMovieDAO favoriteMovieDAO;
+        private final FavoriteMovieDAO favoriteMovieDAO;
 
         DeleteAsyncTask(FavoriteMovieDAO favoriteMovieDAO) {
             this.favoriteMovieDAO = favoriteMovieDAO;

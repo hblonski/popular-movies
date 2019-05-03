@@ -13,7 +13,7 @@ import java.util.List;
 
 public class FavoriteMovieViewModel extends AndroidViewModel {
 
-    private FavoriteMovieRepository favoriteMovieRepository;
+    private final FavoriteMovieRepository favoriteMovieRepository;
 
     private LiveData<List<FavoriteMovie>> favoriteMovies;
 

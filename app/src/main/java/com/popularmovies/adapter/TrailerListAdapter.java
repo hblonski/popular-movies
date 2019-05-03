@@ -17,11 +17,11 @@ import java.util.List;
 public class TrailerListAdapter extends RecyclerView.Adapter<TrailerListAdapter.TrailerViewHolder> {
 
     //Contains the YouTube video keys
-    private List<String> trailerList;
+    private final List<String> trailerList;
 
     private int selectedTrailer = 0;
 
-    private RecyclerViewClickListener recyclerViewClickListener;
+    private final RecyclerViewClickListener recyclerViewClickListener;
 
     public TrailerListAdapter(List<String> trailerList, RecyclerViewClickListener recyclerViewClickListener) {
         this.trailerList = trailerList;
@@ -30,9 +30,9 @@ public class TrailerListAdapter extends RecyclerView.Adapter<TrailerListAdapter.
 
     class TrailerViewHolder extends RecyclerView.ViewHolder {
 
-        ImageView thumbnailImageView;
+        final ImageView thumbnailImageView;
 
-        ImageView playButtonImageView;
+        final ImageView playButtonImageView;
 
         TrailerViewHolder(@NonNull View itemView) {
             super(itemView);

@@ -24,7 +24,7 @@ import com.popularmovies.data.viewmodel.FavoriteMovieViewModel;
 import com.popularmovies.network.themoviedb.model.Movie;
 import com.popularmovies.network.themoviedb.model.Review;
 import com.popularmovies.network.themoviedb.model.Video;
-import com.popularmovies.network.themoviedb.MoviesController;
+import com.popularmovies.network.themoviedb.controller.MoviesController;
 import com.popularmovies.network.youtube.YouTubeController;
 import com.popularmovies.util.LottieHelper;
 

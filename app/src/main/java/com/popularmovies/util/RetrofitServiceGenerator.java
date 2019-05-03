@@ -13,6 +13,7 @@ public abstract class RetrofitServiceGenerator {
 
     private final static Map<Class, Object> services = new HashMap<>();
 
+    @SuppressWarnings("unchecked")
     public static <T> T generateService(String baseUrl, Class<T> serviceClass) {
 
         if (services.containsKey(serviceClass)) {

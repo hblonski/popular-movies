@@ -11,16 +11,16 @@ import com.popularmovies.MainActivity;
 import com.popularmovies.MovieDetailsFragment;
 import com.popularmovies.R;
 import com.popularmovies.network.themoviedb.model.Movie;
-import com.popularmovies.network.themoviedb.MoviesController;
+import com.popularmovies.network.themoviedb.controller.MoviesController;
 
 import java.util.ArrayList;
 import java.util.List;
 
 public class MovieListAdapter extends BaseAdapter {
 
-    private List<Movie> movieList;
+    private final List<Movie> movieList;
 
-    private Context context;
+    private final Context context;
 
     public MovieListAdapter(Context context) {
         this.context = context;

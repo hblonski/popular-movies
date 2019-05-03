@@ -19,13 +19,13 @@ import androidx.lifecycle.ViewModelProviders;
 
 import com.popularmovies.adapter.MovieListAdapter;
 import com.popularmovies.network.themoviedb.MovieListSortOrder;
-import com.popularmovies.network.themoviedb.MoviesController;
+import com.popularmovies.network.themoviedb.viewmodel.MoviesViewModel;
 
 public class MainActivity extends AppCompatActivity {
 
     private final static int VISIBLE_THRESHOLD = 6;
 
-    private MoviesController moviesController;
+    private MoviesViewModel moviesViewModel;
 
     private MovieListSortOrder currentSortOrder;
 
@@ -34,7 +34,7 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        moviesController = ViewModelProviders.of(this).get(MoviesController.class);
+        moviesViewModel = ViewModelProviders.of(this).get(MoviesViewModel.class);
 
         GridView moviesGridView = findViewById(R.id.movies_grid_view);
         final MovieListAdapter movieListAdapter = new MovieListAdapter(this);
@@ -50,10 +50,10 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onScroll(AbsListView view, int firstVisibleItem, int visibleItemCount, int totalItemCount) {
                 int lastVisibleItemPosition = firstVisibleItem + visibleItemCount;
-                if (!moviesController.isLoading() &&
+                if (!moviesViewModel.isLoading() &&
                         firstVisibleItem > 0 &&
                         (lastVisibleItemPosition + VISIBLE_THRESHOLD) > totalItemCount) {
-                    moviesController.fetchNextMoviesListPage(moviesController.getCurrentSortOrder());
+                    moviesViewModel.fetchNextMoviesListPage();
                 }
             }
         });
@@ -62,7 +62,7 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void observeDataChange(final MovieListAdapter movieListAdapter) {
-        moviesController.getMoviesList().observe(this, movies -> {
+        moviesViewModel.getMoviesList().observe(this, movies -> {
             movieListAdapter.setMovieList(movies);
             handleNoResultsLoaded(movies != null ? movies.size() : 0);
         });
@@ -99,11 +99,11 @@ public class MainActivity extends AppCompatActivity {
                 String selectedItemLabel = selectedItem.getText().toString();
                 if (selectedItemLabel.equals(getResources().getString(R.string.popular))) {
                     currentSortOrder = MovieListSortOrder.POPULAR;
-                    moviesController.fetchNextMoviesListPage(currentSortOrder);
                 } else {
                     currentSortOrder = MovieListSortOrder.TOP_RATED;
-                    moviesController.fetchNextMoviesListPage(currentSortOrder);
                 }
+                moviesViewModel.setCurrentSortOrder(currentSortOrder);
+                moviesViewModel.fetchNextMoviesListPage();
             }
 
             @Override

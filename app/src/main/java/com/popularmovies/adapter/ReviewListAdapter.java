@@ -17,7 +17,7 @@ import java.util.List;
 
 public class ReviewListAdapter extends RecyclerView.Adapter<ReviewListAdapter.ReviewViewHolder> {
 
-    private List<Review> reviewList;
+    private final List<Review> reviewList;
 
     private RecyclerView recyclerView;
 
@@ -73,11 +73,11 @@ public class ReviewListAdapter extends RecyclerView.Adapter<ReviewListAdapter.Re
 
         boolean expanded = false;
 
-        TextView authorTextView;
+        final TextView authorTextView;
 
-        TextView contentTextView;
+        final TextView contentTextView;
 
-        public ReviewViewHolder(@NonNull View itemView) {
+        ReviewViewHolder(@NonNull View itemView) {
             super(itemView);
             authorTextView = itemView.findViewById(R.id.review_author);
             contentTextView = itemView.findViewById(R.id.review_content);
