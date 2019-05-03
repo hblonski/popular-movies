@@ -48,7 +48,7 @@ public class MovieDetailsFragment extends Fragment implements RecyclerViewClickL
 
     private View fragmentView;
 
-    private List<String> youTubeVideoKeys;
+    private List<String> youTubeVideoKeys = new ArrayList<>();
 
     private YouTubeController youTubeController;
 

@@ -4,6 +4,7 @@ import com.popularmovies.network.themoviedb.model.Movie;
 import com.popularmovies.network.themoviedb.model.ReviewsResultPage;
 
 import java.net.HttpURLConnection;
+import java.util.List;
 
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -11,10 +12,10 @@ import retrofit2.Response;
 
 class ReviewsCallback implements Callback<ReviewsResultPage> {
 
-    private final MoviesViewModel moviesViewModel;
+    private final List<Movie> movies;
 
-    public ReviewsCallback(MoviesViewModel moviesViewModel) {
-        this.moviesViewModel = moviesViewModel;
+    public ReviewsCallback(List<Movie> movies) {
+        this.movies = movies;
     }
 
     @Override
@@ -22,7 +23,7 @@ class ReviewsCallback implements Callback<ReviewsResultPage> {
         if (response.code() == HttpURLConnection.HTTP_OK) {
             ReviewsResultPage resultPage = response.body();
             Integer movieId = resultPage.getMovieId();
-            Movie movie = moviesViewModel.getMoviesList().getValue()
+            Movie movie = movies
                     .stream()
                     .filter(m -> m.getId().equals(movieId))
                     .findFirst()

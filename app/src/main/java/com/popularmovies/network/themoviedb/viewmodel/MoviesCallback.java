@@ -35,7 +35,7 @@ class MoviesCallback implements Callback<MoviesResultPage> {
                 moviesViewModel.setCurrentPage(FIRST_PAGE);
                 moviesViewModel.setMoviesList(moviesResultPage.getResults());
             }
-            moviesViewModel.fetchMovieVideos();
+            moviesViewModel.fetchVideos();
             moviesViewModel.fetchReviews();
         }
         moviesViewModel.setLoading(false);

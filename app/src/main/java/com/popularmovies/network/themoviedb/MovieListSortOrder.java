@@ -2,5 +2,6 @@ package com.popularmovies.network.themoviedb;
 
 public enum MovieListSortOrder {
     POPULAR,
-    TOP_RATED
+    TOP_RATED,
+    FAVORITES
 }

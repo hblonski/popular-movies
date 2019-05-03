@@ -14,5 +14,6 @@
     <string name="trailers">Trailers</string>
     <string name="reviews">Reviews</string>
     <string name="load_more">Load more</string>
+    <string name="favorites">Favorites</string>
 
 </resources>

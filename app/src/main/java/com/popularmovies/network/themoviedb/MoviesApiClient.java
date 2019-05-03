@@ -1,5 +1,6 @@
 package com.popularmovies.network.themoviedb;
 
+import com.popularmovies.network.themoviedb.model.Movie;
 import com.popularmovies.network.themoviedb.model.MoviesResultPage;
 import com.popularmovies.network.themoviedb.model.ReviewsResultPage;
 import com.popularmovies.network.themoviedb.model.VideosResultPage;
@@ -33,4 +34,7 @@ public interface MoviesApiClient {
 
     @GET("movie/{movie_id}/reviews")
     Call<ReviewsResultPage> getMovieReviews(@Path("movie_id") Integer movieId, @Query("api_key") String apiKey);
+
+    @GET("movie/{movie_id}")
+    Call<Movie> getMovieDetails(@Path("movie_id") Integer movieId, @Query("api_key") String apiKey);
 }

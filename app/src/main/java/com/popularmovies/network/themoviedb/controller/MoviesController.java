@@ -51,7 +51,7 @@ public class MoviesController {
         }
 
         return movies.stream()
-                .map(m -> moviesApiClient.getMovieVideos(m.getId(), MoviesApiClient.API_KEY))
+                .map(m -> moviesApiClient.getMovieVideos(m.getId(), API_KEY))
                 .collect(Collectors.toList());
     }
 
@@ -61,8 +61,12 @@ public class MoviesController {
         }
 
         return movies.stream()
-                .map(m -> moviesApiClient.getMovieReviews(m.getId(), MoviesApiClient.API_KEY))
+                .map(m -> moviesApiClient.getMovieReviews(m.getId(), API_KEY))
                 .collect(Collectors.toList());
+    }
+
+    public Call<Movie> buildMovieDetailsCall(Integer movieId) {
+        return moviesApiClient.getMovieDetails(movieId, API_KEY);
     }
 
     public static void loadMoviePoster(View view, final ImageView imageView, String posterPath) {

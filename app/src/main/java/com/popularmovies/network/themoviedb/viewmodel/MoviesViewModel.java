@@ -6,6 +6,7 @@ import androidx.annotation.NonNull;
 import androidx.lifecycle.AndroidViewModel;
 import androidx.lifecycle.MutableLiveData;
 
+import com.popularmovies.data.entity.FavoriteMovie;
 import com.popularmovies.network.themoviedb.MovieListSortOrder;
 import com.popularmovies.network.themoviedb.controller.MoviesController;
 import com.popularmovies.network.themoviedb.model.Movie;
@@ -13,7 +14,9 @@ import com.popularmovies.network.themoviedb.model.MoviesResultPage;
 import com.popularmovies.network.themoviedb.model.ReviewsResultPage;
 import com.popularmovies.network.themoviedb.model.VideosResultPage;
 
+import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 import retrofit2.Call;
 
@@ -39,20 +42,31 @@ public class MoviesViewModel extends AndroidViewModel {
         moviesController = new MoviesController();
     }
 
-    public void fetchNextMoviesListPage() {
+    public void fetchNextMoviesPage() {
         Call<MoviesResultPage> call = moviesController.buildMovieListCall(currentSortOrder, currentPage + 1);
         loading = true;
         call.enqueue(new MoviesCallback(this));
     }
 
-    public void fetchMovieVideos() {
+    public void fetchVideos() {
         List<Call<VideosResultPage>> callList = moviesController.buildVideoListCalls(moviesList.getValue());
-        callList.forEach(c -> c.enqueue(new VideosCallback(this)));
+        callList.forEach(c -> c.enqueue(new VideosCallback(moviesList.getValue())));
     }
 
     public void fetchReviews() {
         List<Call<ReviewsResultPage>> callList = moviesController.buildReviewListCalls(moviesList.getValue());
-        callList.forEach(c -> c.enqueue(new ReviewsCallback(this)));
+        callList.forEach(c -> c.enqueue(new ReviewsCallback(moviesList.getValue())));
+    }
+
+    public void fetchMovieListDetails(List<FavoriteMovie> favoriteMovies) {
+        moviesList.setValue(new ArrayList<>());
+        if (favoriteMovies != null && !favoriteMovies.isEmpty()) {
+            List<Call<Movie>> callList = favoriteMovies
+                    .stream()
+                    .map(m -> moviesController.buildMovieDetailsCall(m.getMovieId()))
+                    .collect(Collectors.toList());
+            callList.forEach(c -> c.enqueue(new MovieCallback(this)));
+        }
     }
 
     public MutableLiveData<List<Movie>> getMoviesList() {
@@ -80,5 +94,16 @@ public class MoviesViewModel extends AndroidViewModel {
 
     void setMoviesList(List<Movie> moviesList) {
         this.moviesList.setValue(moviesList);
+    }
+
+    //Adds a single movie to the list. This method is necessary since adding a single item to
+    //the LiveData value (when it is a collection) doesn't notify the observers
+    void addMovieToList(Movie movie) {
+        //Synchronized so that no value is lost when the asynchronous calls add items
+        synchronized (this) {
+            moviesList.getValue().add(movie);
+            //Sets the value as itself, just to notify the observers
+            moviesList.setValue(moviesList.getValue());
+        }
     }
 }

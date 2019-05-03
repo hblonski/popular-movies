@@ -18,8 +18,12 @@ import androidx.fragment.app.FragmentTransaction;
 import androidx.lifecycle.ViewModelProviders;
 
 import com.popularmovies.adapter.MovieListAdapter;
+import com.popularmovies.data.entity.FavoriteMovie;
+import com.popularmovies.data.viewmodel.FavoriteMovieViewModel;
 import com.popularmovies.network.themoviedb.MovieListSortOrder;
 import com.popularmovies.network.themoviedb.viewmodel.MoviesViewModel;
+
+import java.util.List;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -29,14 +33,21 @@ public class MainActivity extends AppCompatActivity {
 
     private MovieListSortOrder currentSortOrder;
 
+    private GridView moviesGridView;
+
+    private FavoriteMovieViewModel favoriteMovieViewModel;
+
+    private List<FavoriteMovie> favoriteMovies;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
         moviesViewModel = ViewModelProviders.of(this).get(MoviesViewModel.class);
+        favoriteMovieViewModel = ViewModelProviders.of(this).get(FavoriteMovieViewModel.class);
 
-        GridView moviesGridView = findViewById(R.id.movies_grid_view);
+        moviesGridView = findViewById(R.id.movies_grid_view);
         final MovieListAdapter movieListAdapter = new MovieListAdapter(this);
         moviesGridView.setAdapter(movieListAdapter);
 
@@ -45,6 +56,7 @@ public class MainActivity extends AppCompatActivity {
 
             @Override
             public void onScrollStateChanged(AbsListView view, int scrollState) {
+                //Empty
             }
 
             @Override
@@ -53,19 +65,17 @@ public class MainActivity extends AppCompatActivity {
                 if (!moviesViewModel.isLoading() &&
                         firstVisibleItem > 0 &&
                         (lastVisibleItemPosition + VISIBLE_THRESHOLD) > totalItemCount) {
-                    moviesViewModel.fetchNextMoviesListPage();
+                    moviesViewModel.fetchNextMoviesPage();
                 }
             }
         });
 
-        observeDataChange(movieListAdapter);
-    }
-
-    private void observeDataChange(final MovieListAdapter movieListAdapter) {
         moviesViewModel.getMoviesList().observe(this, movies -> {
             movieListAdapter.setMovieList(movies);
             handleNoResultsLoaded(movies != null ? movies.size() : 0);
         });
+
+        favoriteMovieViewModel.findAll().observe(this, fm -> favoriteMovies = fm);
     }
 
     private void handleNoResultsLoaded(int resultsCount) {
@@ -97,13 +107,19 @@ public class MainActivity extends AppCompatActivity {
                 selectedItem.setTextColor(Color.WHITE);
 
                 String selectedItemLabel = selectedItem.getText().toString();
-                if (selectedItemLabel.equals(getResources().getString(R.string.popular))) {
-                    currentSortOrder = MovieListSortOrder.POPULAR;
+                if (selectedItemLabel.equals(getResources().getString(R.string.favorites))) {
+                    currentSortOrder = MovieListSortOrder.FAVORITES;
+                    moviesViewModel.setCurrentSortOrder(currentSortOrder);
+                    moviesViewModel.fetchMovieListDetails(favoriteMovies);
                 } else {
-                    currentSortOrder = MovieListSortOrder.TOP_RATED;
+                    if (selectedItemLabel.equals(getResources().getString(R.string.popular))) {
+                        currentSortOrder = MovieListSortOrder.POPULAR;
+                    } else {
+                        currentSortOrder = MovieListSortOrder.TOP_RATED;
+                    }
+                    moviesViewModel.setCurrentSortOrder(currentSortOrder);
+                    moviesViewModel.fetchNextMoviesPage();
                 }
-                moviesViewModel.setCurrentSortOrder(currentSortOrder);
-                moviesViewModel.fetchNextMoviesListPage();
             }
 
             @Override
