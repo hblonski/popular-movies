@@ -48,14 +48,14 @@ public class MoviesViewModel extends AndroidViewModel {
         call.enqueue(new MoviesCallback(this));
     }
 
-    public void fetchVideos() {
-        List<Call<VideosResultPage>> callList = moviesController.buildVideoListCalls(moviesList.getValue());
-        callList.forEach(c -> c.enqueue(new VideosCallback(moviesList.getValue(), getApplication())));
+    public void fetchVideos(Movie movie) {
+        Call<VideosResultPage> call = moviesController.buildVideoListCall(movie);
+        call.enqueue(new VideosCallback(movie));
     }
 
-    public void fetchReviews() {
-        List<Call<ReviewsResultPage>> callList = moviesController.buildReviewListCalls(moviesList.getValue());
-        callList.forEach(c -> c.enqueue(new ReviewsCallback(moviesList.getValue(), getApplication())));
+    public void fetchReviews(Movie movie) {
+        Call<ReviewsResultPage> call = moviesController.buildReviewListCall(movie);
+        call.enqueue(new ReviewsCallback(movie));
     }
 
     public void fetchMovieListDetails(List<FavoriteMovie> favoriteMovies) {

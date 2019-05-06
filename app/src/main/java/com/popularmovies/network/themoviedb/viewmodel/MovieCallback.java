@@ -1,9 +1,8 @@
 package com.popularmovies.network.themoviedb.viewmodel;
 
-import android.widget.Toast;
-
-import com.popularmovies.R;
 import com.popularmovies.network.themoviedb.model.Movie;
+import com.popularmovies.util.bus.EventBus;
+import com.popularmovies.util.bus.MovieEvent;
 
 import java.net.HttpURLConnection;
 
@@ -12,6 +11,8 @@ import retrofit2.Callback;
 import retrofit2.Response;
 
 public class MovieCallback implements Callback<Movie> {
+
+    private final EventBus eventBusInstance = EventBus.getInstance();
 
     private final MoviesViewModel moviesViewModel;
 
@@ -23,19 +24,14 @@ public class MovieCallback implements Callback<Movie> {
     public void onResponse(Call<Movie> call, Response<Movie> response) {
         if (response.code() == HttpURLConnection.HTTP_OK) {
             moviesViewModel.addMovieToList(response.body());
+            eventBusInstance.publish(new MovieEvent(null, MovieEvent.Type.LOADED_MOVIE_DETAILS, true));
         } else {
-            handleFailure();
+            eventBusInstance.publish(new MovieEvent(null, MovieEvent.Type.LOADED_MOVIE_DETAILS, false));
         }
     }
 
     @Override
     public void onFailure(Call<Movie> call, Throwable t) {
-        handleFailure();
-    }
-
-    private void handleFailure() {
-        Toast.makeText(moviesViewModel.getApplication(),
-                R.string.connection_error_the_movie_db,
-                Toast.LENGTH_SHORT).show();
+        eventBusInstance.publish(new MovieEvent(null, MovieEvent.Type.LOADED_MOVIE_DETAILS, false));
     }
 }

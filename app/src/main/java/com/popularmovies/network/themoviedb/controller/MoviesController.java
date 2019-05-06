@@ -14,8 +14,6 @@ import com.popularmovies.network.themoviedb.model.VideosResultPage;
 import com.popularmovies.util.RetrofitServiceGenerator;
 
 import java.security.InvalidParameterException;
-import java.util.List;
-import java.util.stream.Collectors;
 
 import retrofit2.Call;
 
@@ -45,28 +43,20 @@ public class MoviesController {
         return call;
     }
 
-    public List<Call<VideosResultPage>> buildVideoListCalls(List<Movie> movies) {
-        if (movies == null) {
-            throw new InvalidParameterException("Movie list should not be null.");
+    public Call<VideosResultPage> buildVideoListCall(Movie movie) {
+        if (movie == null) {
+            throw new InvalidParameterException("Movie should not be null.");
         }
 
-        return movies.stream()
-                .map(m -> moviesApiClient.getMovieVideos(m.getId(), API_KEY))
-                .collect(Collectors.toList());
-    }
-
-    public Call<VideosResultPage> buildVideoListCall(Movie movie) {
         return moviesApiClient.getMovieVideos(movie.getId(), API_KEY);
     }
 
-    public List<Call<ReviewsResultPage>> buildReviewListCalls(List<Movie> movies) {
-        if (movies == null) {
-            throw new InvalidParameterException("Movie list should not be null.");
+    public Call<ReviewsResultPage> buildReviewListCall(Movie movie) {
+        if (movie == null) {
+            throw new InvalidParameterException("Movie should not be null.");
         }
 
-        return movies.stream()
-                .map(m -> moviesApiClient.getMovieReviews(m.getId(), API_KEY))
-                .collect(Collectors.toList());
+        return moviesApiClient.getMovieReviews(movie.getId(), API_KEY);
     }
 
     public Call<Movie> buildMovieDetailsCall(Integer movieId) {

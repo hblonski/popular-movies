@@ -5,7 +5,7 @@ import android.widget.ImageView;
 
 import com.popularmovies.network.glide.GlideHelper;
 
-public class YouTubeController {
+public abstract class YouTubeController {
 
     private static final String THUMBNAIL_BASE_URL = "https://img.youtube.com/vi/%s/0.jpg";
 

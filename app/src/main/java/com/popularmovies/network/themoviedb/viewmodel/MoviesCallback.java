@@ -1,10 +1,9 @@
 package com.popularmovies.network.themoviedb.viewmodel;
 
-import android.widget.Toast;
-
-import com.popularmovies.R;
 import com.popularmovies.network.themoviedb.model.Movie;
 import com.popularmovies.network.themoviedb.model.MoviesResultPage;
+import com.popularmovies.util.bus.EventBus;
+import com.popularmovies.util.bus.MovieEvent;
 
 import java.net.HttpURLConnection;
 import java.util.Collections;
@@ -17,6 +16,8 @@ import retrofit2.Response;
 class MoviesCallback implements Callback<MoviesResultPage> {
 
     private static final int FIRST_PAGE = 1;
+
+    private final EventBus eventBusInstance = EventBus.getInstance();
 
     private final MoviesViewModel moviesViewModel;
 
@@ -38,9 +39,8 @@ class MoviesCallback implements Callback<MoviesResultPage> {
                 moviesViewModel.setCurrentPage(FIRST_PAGE);
                 moviesViewModel.setMoviesList(moviesResultPage.getResults());
             }
-            moviesViewModel.fetchVideos();
-            moviesViewModel.fetchReviews();
             moviesViewModel.setLoading(false);
+            eventBusInstance.publish(new MovieEvent(null, MovieEvent.Type.LOADED_MOVIE_LIST, true));
         } else {
             handleFailure();
         }
@@ -54,8 +54,6 @@ class MoviesCallback implements Callback<MoviesResultPage> {
     private void handleFailure() {
         moviesViewModel.setMoviesList(Collections.emptyList());
         moviesViewModel.setLoading(false);
-        Toast.makeText(moviesViewModel.getApplication(),
-                R.string.connection_error_the_movie_db,
-                Toast.LENGTH_LONG).show();
+        eventBusInstance.publish(new MovieEvent(null, MovieEvent.Type.LOADED_MOVIE_LIST, false));
     }
 }

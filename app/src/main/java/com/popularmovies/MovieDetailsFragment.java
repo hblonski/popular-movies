@@ -6,6 +6,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.cardview.widget.CardView;
@@ -23,8 +24,9 @@ import com.popularmovies.network.themoviedb.controller.MoviesController;
 import com.popularmovies.network.themoviedb.model.Movie;
 import com.popularmovies.network.themoviedb.model.Review;
 import com.popularmovies.network.themoviedb.model.Video;
-import com.popularmovies.network.youtube.YouTubeController;
+import com.popularmovies.network.themoviedb.viewmodel.MoviesViewModel;
 import com.popularmovies.util.LottieHelper;
+import com.popularmovies.util.bus.EventBus;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -40,6 +42,8 @@ public class MovieDetailsFragment extends Fragment {
 
     private FavoriteMovieViewModel favoriteMovieViewModel;
 
+    private MoviesViewModel moviesViewModel;
+
     private Movie movie;
 
     private FavoriteMovie favoriteMovie = null;
@@ -47,8 +51,6 @@ public class MovieDetailsFragment extends Fragment {
     private View fragmentView;
 
     private List<String> youTubeVideoKeys = new ArrayList<>();
-
-    private YouTubeController youTubeController;
 
     private List<Review> loadedReviews;
 
@@ -75,7 +77,7 @@ public class MovieDetailsFragment extends Fragment {
             movie = arguments.getParcelable(ARG_MOVIE);
         }
         favoriteMovieViewModel = ViewModelProviders.of(this).get(FavoriteMovieViewModel.class);
-        youTubeController = new YouTubeController();
+        moviesViewModel = ViewModelProviders.of(this).get(MoviesViewModel.class);
         loadedReviews = new ArrayList<>();
     }
 
@@ -84,11 +86,23 @@ public class MovieDetailsFragment extends Fragment {
         // Inflate the layout for this fragment
         fragmentView = inflater.inflate(R.layout.fragment_movie_details, container, false);
 
-        setupTrailersKeyList();
-        setupTrailersRecyclerView();
+        EventBus eventBus = EventBus.getInstance();
+        eventBus.getObservable().subscribe(m -> {
+            if (m.getMovieId() == movie.getId()) {
+                if (!m.isSuccess()) {
+                    handleConnectionFailure();
+                } else {
+                    switch (m.getType()) {
+                        case LOADED_VIDEOS: setupTrailersRecyclerView();
+                        case LOADED_REVIEWS: setupReviewsRecyclerView();
+                    }
+                }
+            }
+        });
+        moviesViewModel.fetchVideos(movie);
+        moviesViewModel.fetchReviews(movie);
         setupMovieInfoViews();
         setupFavoriteButton();
-        setupReviewsRecyclerView();
 
         return fragmentView;
     }
@@ -115,7 +129,8 @@ public class MovieDetailsFragment extends Fragment {
         }
     }
 
-    private void setupTrailersRecyclerView() {
+    public void setupTrailersRecyclerView() {
+        setupTrailersKeyList();
         RecyclerView trailersRecyclerView = fragmentView.findViewById(R.id.d_trailers_recycler_view);
         TrailerListAdapter trailerListAdapter = new TrailerListAdapter(youTubeVideoKeys);
         trailersRecyclerView.setAdapter(trailerListAdapter);
@@ -131,7 +146,7 @@ public class MovieDetailsFragment extends Fragment {
         }
     }
 
-    private void setupReviewsRecyclerView() {
+    public void setupReviewsRecyclerView() {
         RecyclerView reviewsRecyclerView = fragmentView.findViewById(R.id.d_reviews_recycler_view);
         ReviewListAdapter reviewListAdapter = new ReviewListAdapter();
         reviewsRecyclerView.setAdapter(reviewListAdapter);
@@ -169,6 +184,12 @@ public class MovieDetailsFragment extends Fragment {
         } else {
             fragmentView.findViewById(R.id.d_label_no_reviews_found).setVisibility(View.GONE);
         }
+    }
+
+    private void handleConnectionFailure() {
+        Toast.makeText(getContext(),
+                R.string.connection_error_the_movie_db,
+                Toast.LENGTH_LONG).show();
     }
 
     private void setupFavoriteButton() {

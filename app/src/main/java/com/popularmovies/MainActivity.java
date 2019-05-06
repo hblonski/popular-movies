@@ -11,6 +11,7 @@ import android.widget.ArrayAdapter;
 import android.widget.GridView;
 import android.widget.Spinner;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.Fragment;
@@ -22,6 +23,8 @@ import com.popularmovies.data.entity.FavoriteMovie;
 import com.popularmovies.data.viewmodel.FavoriteMovieViewModel;
 import com.popularmovies.network.themoviedb.MovieListSortOrder;
 import com.popularmovies.network.themoviedb.viewmodel.MoviesViewModel;
+import com.popularmovies.util.bus.EventBus;
+import com.popularmovies.util.bus.MovieEvent;
 
 import java.util.List;
 
@@ -76,6 +79,19 @@ public class MainActivity extends AppCompatActivity {
         });
 
         favoriteMovieViewModel.findAll().observe(this, fm -> favoriteMovies = fm);
+        subscribeToEventBus();
+    }
+
+    private void subscribeToEventBus() {
+        EventBus.getInstance().getObservable().subscribe(e -> {
+            if ((e.getType().equals(MovieEvent.Type.LOADED_MOVIE_LIST)
+            || e.getType().equals(MovieEvent.Type.LOADED_MOVIE_DETAILS))
+            && !e.isSuccess()) {
+                Toast.makeText(this,
+                        R.string.connection_error_the_movie_db,
+                        Toast.LENGTH_LONG).show();
+            }
+        });
     }
 
     private void handleNoResultsLoaded(int resultsCount) {

@@ -1,14 +1,11 @@
 package com.popularmovies.network.themoviedb.viewmodel;
 
-import android.content.Context;
-import android.widget.Toast;
-
-import com.popularmovies.R;
 import com.popularmovies.network.themoviedb.model.Movie;
 import com.popularmovies.network.themoviedb.model.VideosResultPage;
+import com.popularmovies.util.bus.EventBus;
+import com.popularmovies.util.bus.MovieEvent;
 
 import java.net.HttpURLConnection;
-import java.util.List;
 
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -16,13 +13,12 @@ import retrofit2.Response;
 
 class VideosCallback implements Callback<VideosResultPage> {
 
-    private final List<Movie> movies;
+    private final Movie movie;
 
-    private final Context context;
+    private final EventBus eventBusInstance = EventBus.getInstance();
 
-    public VideosCallback(List<Movie> movies, Context context) {
-        this.movies = movies;
-        this.context = context;
+    public VideosCallback(Movie movie) {
+        this.movie = movie;
     }
 
     @SuppressWarnings("ConstantConditions")
@@ -30,26 +26,15 @@ class VideosCallback implements Callback<VideosResultPage> {
     public void onResponse(Call<VideosResultPage> call, Response<VideosResultPage> response) {
         if (response.code() == HttpURLConnection.HTTP_OK) {
             VideosResultPage resultPage = response.body();
-            Integer movieId = resultPage.getMovieId();
-            Movie movie = movies
-                    .stream()
-                    .filter(m -> m.getId().equals(movieId))
-                    .findFirst()
-                    .orElse(null);
             movie.setVideos(resultPage.getVideos());
+            eventBusInstance.publish(new MovieEvent(movie.getId(), MovieEvent.Type.LOADED_VIDEOS, true));
         } else {
-            handleFailure();
+            eventBusInstance.publish(new MovieEvent(movie.getId(), MovieEvent.Type.LOADED_VIDEOS, false));
         }
     }
 
     @Override
     public void onFailure(Call<VideosResultPage> call, Throwable t) {
-        handleFailure();
-    }
-
-    private void handleFailure() {
-        Toast.makeText(context,
-                R.string.connection_error_the_movie_db,
-                Toast.LENGTH_LONG).show();
+        eventBusInstance.publish(new MovieEvent(movie.getId(), MovieEvent.Type.LOADED_VIDEOS, false));
     }
 }
