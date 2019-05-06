@@ -1,5 +1,8 @@
 package com.popularmovies.network.themoviedb.viewmodel;
 
+import android.widget.Toast;
+
+import com.popularmovies.R;
 import com.popularmovies.network.themoviedb.model.Movie;
 import com.popularmovies.network.themoviedb.model.MoviesResultPage;
 
@@ -37,13 +40,22 @@ class MoviesCallback implements Callback<MoviesResultPage> {
             }
             moviesViewModel.fetchVideos();
             moviesViewModel.fetchReviews();
+            moviesViewModel.setLoading(false);
+        } else {
+            handleFailure();
         }
-        moviesViewModel.setLoading(false);
     }
 
     @Override
     public void onFailure(Call<MoviesResultPage> call, Throwable t) {
+        handleFailure();
+    }
+
+    private void handleFailure() {
         moviesViewModel.setMoviesList(Collections.emptyList());
         moviesViewModel.setLoading(false);
+        Toast.makeText(moviesViewModel.getApplication(),
+                R.string.connection_error_the_movie_db,
+                Toast.LENGTH_LONG).show();
     }
 }

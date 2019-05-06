@@ -55,6 +55,10 @@ public class MoviesController {
                 .collect(Collectors.toList());
     }
 
+    public Call<VideosResultPage> buildVideoListCall(Movie movie) {
+        return moviesApiClient.getMovieVideos(movie.getId(), API_KEY);
+    }
+
     public List<Call<ReviewsResultPage>> buildReviewListCalls(List<Movie> movies) {
         if (movies == null) {
             throw new InvalidParameterException("Movie list should not be null.");

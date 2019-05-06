@@ -1,5 +1,9 @@
 package com.popularmovies.network.themoviedb.viewmodel;
 
+import android.content.Context;
+import android.widget.Toast;
+
+import com.popularmovies.R;
 import com.popularmovies.network.themoviedb.model.Movie;
 import com.popularmovies.network.themoviedb.model.ReviewsResultPage;
 
@@ -14,7 +18,10 @@ class ReviewsCallback implements Callback<ReviewsResultPage> {
 
     private final List<Movie> movies;
 
-    public ReviewsCallback(List<Movie> movies) {
+    private final Context context;
+
+    public ReviewsCallback(List<Movie> movies, Context context) {
+        this.context = context;
         this.movies = movies;
     }
 
@@ -29,11 +36,19 @@ class ReviewsCallback implements Callback<ReviewsResultPage> {
                     .findFirst()
                     .orElse(null);
             movie.setReviews(resultPage.getReviews());
+        } else {
+            handleFailure();
         }
     }
 
     @Override
     public void onFailure(Call<ReviewsResultPage> call, Throwable t) {
-        //Empty
+        handleFailure();
+    }
+
+    private void handleFailure() {
+        Toast.makeText(context,
+                R.string.connection_error_the_movie_db,
+                Toast.LENGTH_LONG).show();
     }
 }

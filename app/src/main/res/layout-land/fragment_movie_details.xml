@@ -143,24 +143,31 @@
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/d_image_view_poster" />
 
-            <fragment
-                android:id="@+id/youtube_player_fragment"
-                android:name="com.google.android.youtube.player.YouTubePlayerSupportFragment"
-                android:layout_width="600dp"
-                android:layout_height="337dp"
-                android:layout_margin="10dp"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/d_trailers_label"></fragment>
-
-            <androidx.recyclerview.widget.RecyclerView
-                android:id="@+id/trailers_recycler_view"
-                android:layout_width="match_parent"
+            <FrameLayout
+                android:id="@+id/d_trailers_layout"
                 android:layout_height="wrap_content"
-                android:layout_margin="10dp"
-                android:background="@color/colorPrimaryLight"
+                android:layout_width="match_parent"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/youtube_player_fragment" />
+                app:layout_constraintTop_toBottomOf="@+id/d_trailers_label"
+                android:layout_margin="10dp">
+
+                <TextView
+                    android:id="@+id/d_label_no_trailers_found"
+                    style="@style/DetailsContent"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:layout_marginBottom="8dp"
+                    android:gravity="center"
+                    android:text="@string/no_trailers_found"
+                    android:textSize="15sp"/>
+
+                <androidx.recyclerview.widget.RecyclerView
+                    android:id="@+id/d_trailers_recycler_view"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:background="@color/colorPrimaryLight"/>
+            </FrameLayout>
 
             <TextView
                 android:id="@+id/d_reviews_label"
@@ -171,7 +178,21 @@
                 android:text="@string/reviews"
                 android:gravity="center"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/trailers_recycler_view"/>
+                app:layout_constraintTop_toBottomOf="@+id/d_trailers_layout"/>
+
+            <TextView
+                android:id="@+id/d_label_no_reviews_found"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="@string/no_reviews_found"
+                style="@style/DetailsContent"
+                android:textSize="15sp"
+                android:gravity="center"
+                android:layout_gravity="center"
+                android:layout_margin="10dp"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/d_reviews_label"/>
 
             <androidx.recyclerview.widget.RecyclerView
                 android:id="@+id/d_reviews_recycler_view"

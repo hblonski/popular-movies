@@ -1,5 +1,9 @@
 package com.popularmovies.network.themoviedb.viewmodel;
 
+import android.content.Context;
+import android.widget.Toast;
+
+import com.popularmovies.R;
 import com.popularmovies.network.themoviedb.model.Movie;
 import com.popularmovies.network.themoviedb.model.VideosResultPage;
 
@@ -14,8 +18,11 @@ class VideosCallback implements Callback<VideosResultPage> {
 
     private final List<Movie> movies;
 
-    public VideosCallback(List<Movie> movies) {
+    private final Context context;
+
+    public VideosCallback(List<Movie> movies, Context context) {
         this.movies = movies;
+        this.context = context;
     }
 
     @SuppressWarnings("ConstantConditions")
@@ -30,11 +37,19 @@ class VideosCallback implements Callback<VideosResultPage> {
                     .findFirst()
                     .orElse(null);
             movie.setVideos(resultPage.getVideos());
+        } else {
+            handleFailure();
         }
     }
 
     @Override
     public void onFailure(Call<VideosResultPage> call, Throwable t) {
-        //Empty
+        handleFailure();
+    }
+
+    private void handleFailure() {
+        Toast.makeText(context,
+                R.string.connection_error_the_movie_db,
+                Toast.LENGTH_LONG).show();
     }
 }

@@ -1,5 +1,8 @@
 package com.popularmovies.adapter;
 
+import android.content.ActivityNotFoundException;
+import android.content.Intent;
+import android.net.Uri;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -8,36 +11,30 @@ import android.widget.ImageView;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.RecyclerViewClickListener;
 import com.popularmovies.R;
 import com.popularmovies.network.youtube.YouTubeController;
 
 import java.util.List;
+
+import static com.popularmovies.network.youtube.YouTubeController.BASE_URL;
+import static com.popularmovies.network.youtube.YouTubeController.YOUTUBE_APP_URI;
 
 public class TrailerListAdapter extends RecyclerView.Adapter<TrailerListAdapter.TrailerViewHolder> {
 
     //Contains the YouTube video keys
     private final List<String> trailerList;
 
-    private int selectedTrailer = 0;
-
-    private final RecyclerViewClickListener recyclerViewClickListener;
-
-    public TrailerListAdapter(List<String> trailerList, RecyclerViewClickListener recyclerViewClickListener) {
+    public TrailerListAdapter(List<String> trailerList) {
         this.trailerList = trailerList;
-        this.recyclerViewClickListener = recyclerViewClickListener;
     }
 
     class TrailerViewHolder extends RecyclerView.ViewHolder {
 
         final ImageView thumbnailImageView;
 
-        final ImageView playButtonImageView;
-
         TrailerViewHolder(@NonNull View itemView) {
             super(itemView);
             thumbnailImageView = itemView.findViewById(R.id.trailer_thumbnail);
-            playButtonImageView = itemView.findViewById(R.id.play_button);
         }
     }
 
@@ -58,20 +55,15 @@ public class TrailerListAdapter extends RecyclerView.Adapter<TrailerListAdapter.
                     holder.thumbnailImageView,
                     trailerKey);
 
-            //All the thumbnails have the "Play" icon, except the one selected (this one will have
-            // the "Pause" icon). When a trailer is selected, the states must change to reflect
-            // the new trailer being focused.
-            if (selectedTrailer == position) {
-                holder.playButtonImageView.setImageResource(R.drawable.ic_pause_circle_24dp);
-            } else {
-                holder.playButtonImageView.setImageResource(R.drawable.ic_play_circle_24dp);
-            }
-
             holder.itemView.setOnClickListener(v -> {
-                notifyItemChanged(selectedTrailer);
-                selectedTrailer = position;
-                notifyItemChanged(selectedTrailer);
-                recyclerViewClickListener.onItemClicked(selectedTrailer);
+                Intent appIntent = new Intent(Intent.ACTION_VIEW, Uri.parse(YOUTUBE_APP_URI + trailerKey));
+                Intent webIntent = new Intent(Intent.ACTION_VIEW, Uri.parse(BASE_URL + trailerKey));
+                //If the YouTube app is not installed, it will fail and open on the browser
+                try {
+                    holder.itemView.getContext().startActivity(appIntent);
+                } catch (ActivityNotFoundException ex) {
+                    holder.itemView.getContext().startActivity(webIntent);
+                }
             });
         }
     }
