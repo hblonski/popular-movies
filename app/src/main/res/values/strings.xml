@@ -7,6 +7,17 @@
 
     <string name="no_results_loaded">No results were loaded.</string>
     <string name="release_date">Release date:</string>
-    <string name="vote_average">Vote average:</string>
+    <string name="user_score">User score:</string>
+    <string name="movie_poster">Movie poster</string>
+    <string name="favorite_button">Favorite button</string>
+    <string name="movie_title">Movie title</string>
+    <string name="trailers">Trailers</string>
+    <string name="reviews">Reviews</string>
+    <string name="load_more">Load more</string>
+    <string name="favorites">Favorites</string>
+    <string name="no_reviews_found">No reviews found.</string>
+    <string name="no_trailers_found">No trailers found.</string>
+
+    <string name="connection_error_the_movie_db">Couldn\'t connect to TheMovieDB.</string>
 
 </resources>

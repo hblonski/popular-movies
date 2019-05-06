@@ -10,17 +10,17 @@ import android.widget.ImageView;
 import com.popularmovies.MainActivity;
 import com.popularmovies.MovieDetailsFragment;
 import com.popularmovies.R;
-import com.popularmovies.model.Movie;
-import com.popularmovies.network.MovieController;
+import com.popularmovies.network.themoviedb.model.Movie;
+import com.popularmovies.network.themoviedb.controller.MoviesController;
 
 import java.util.ArrayList;
 import java.util.List;
 
 public class MovieListAdapter extends BaseAdapter {
 
-    private List<Movie> movieList;
+    private final List<Movie> movieList;
 
-    private Context context;
+    private final Context context;
 
     public MovieListAdapter(Context context) {
         this.context = context;
@@ -52,17 +52,13 @@ public class MovieListAdapter extends BaseAdapter {
     public View getView(int position, View convertView, ViewGroup parent) {
 
         if (convertView == null) {
-            convertView = LayoutInflater.from(context).inflate(R.layout.movie_card, parent, false);
+            convertView = LayoutInflater.from(context).inflate(R.layout.card_movie, parent, false);
         }
         ImageView imageViewPoster = convertView.findViewById(R.id.image_view_poster);
         final Movie viewMovie = movieList.get(position);
-        MovieController.loadMoviePoster(convertView, imageViewPoster, viewMovie.getPosterPath());
-        imageViewPoster.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                ((MainActivity) context).createFragment(MovieDetailsFragment.newInstance(viewMovie));
-            }
-        });
+        MoviesController.loadMoviePoster(convertView, imageViewPoster, viewMovie.getPosterPath());
+        imageViewPoster.setOnClickListener(v -> ((MainActivity) context)
+                .createFragment(MovieDetailsFragment.newInstance(viewMovie)));
         return convertView;
     }
 }

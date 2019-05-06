@@ -25,9 +25,9 @@
             <TextView
                 android:id="@+id/d_movie_title"
                 style="@style/DetailsLabel"
-                android:layout_width="305dp"
+                android:layout_width="607dp"
                 android:layout_height="75dp"
-                android:layout_marginStart="15dp"
+                android:layout_marginStart="20dp"
                 android:layout_marginTop="3dp"
                 android:layout_marginEnd="10dp"
                 android:layout_marginBottom="3dp"
@@ -48,7 +48,7 @@
                 android:id="@+id/d_favorite_button"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginStart="20dp"
+                android:layout_marginEnd="15dp"
                 android:background="@android:color/transparent"
                 android:contentDescription="@string/favorite_button"
                 android:scaleType="fitXY"
@@ -74,7 +74,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="10dp"
-                android:layout_marginTop="30dp"
+                android:layout_marginTop="10dp"
                 android:text="@string/user_score"
                 app:layout_constraintStart_toEndOf="@+id/d_image_view_poster"
                 app:layout_constraintTop_toBottomOf="@+id/d_title_background" />
@@ -93,10 +93,10 @@
                 style="@style/DetailsLabel"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="10dp"
+                android:layout_marginTop="8dp"
                 android:text="@string/release_date"
                 app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintHorizontal_bias="0.068"
+                app:layout_constraintHorizontal_bias="0.022"
                 app:layout_constraintStart_toEndOf="@+id/d_image_view_poster"
                 app:layout_constraintTop_toBottomOf="@+id/d_user_score_label" />
 
@@ -110,17 +110,27 @@
                 app:layout_constraintStart_toEndOf="@+id/d_movie_release_date_label"
                 app:layout_constraintTop_toBottomOf="@+id/d_user_score" />
 
-            <TextView
-                android:id="@+id/d_movie_overview"
-                style="@style/DetailsContent"
-                android:justificationMode="inter_word"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginStart="10dp"
-                android:layout_marginEnd="10dp"
-                android:layout_marginTop="5dp"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/d_image_view_poster" />
+            <ScrollView
+                android:layout_width="0dp"
+                android:layout_height="175dp"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintHorizontal_bias="0.111"
+                app:layout_constraintStart_toEndOf="@+id/d_image_view_poster"
+                app:layout_constraintTop_toBottomOf="@+id/d_movie_release_date_label"
+                app:layout_constrainedHeight="true"
+                app:layout_constrainedWidth="true">
+
+                <TextView
+                    android:id="@+id/d_movie_overview"
+                    style="@style/DetailsContent"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_marginStart="8dp"
+                    android:layout_marginTop="15dp"
+                    android:layout_marginEnd="15dp"
+                    android:justificationMode="inter_word"/>
+
+            </ScrollView>
 
             <TextView
                 android:id="@+id/d_trailers_label"
@@ -131,7 +141,7 @@
                 android:text="@string/trailers"
                 android:gravity="center"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/d_movie_overview" />
+                app:layout_constraintTop_toBottomOf="@+id/d_image_view_poster" />
 
             <FrameLayout
                 android:id="@+id/d_trailers_layout"
@@ -172,18 +182,17 @@
 
             <TextView
                 android:id="@+id/d_label_no_reviews_found"
-                style="@style/DetailsContent"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:text="@string/no_reviews_found"
+                style="@style/DetailsContent"
+                android:textSize="15sp"
+                android:gravity="center"
                 android:layout_gravity="center"
                 android:layout_margin="10dp"
-                android:layout_marginBottom="8dp"
-                android:gravity="center"
-                android:text="@string/no_reviews_found"
-                android:textSize="15sp"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/d_reviews_label" />
+                app:layout_constraintTop_toBottomOf="@+id/d_reviews_label"/>
 
             <androidx.recyclerview.widget.RecyclerView
                 android:id="@+id/d_reviews_recycler_view"

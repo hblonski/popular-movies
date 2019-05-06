@@ -4,27 +4,26 @@
     android:id="@+id/activity_main_frameLayout"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@android:color/white"
     tools:context=".MainActivity">
 
     <GridView
         android:id="@+id/movies_grid_view"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        tools:listitem="@layout/movie_card"
+        tools:listitem="@layout/card_movie"
         android:numColumns="auto_fit"
         android:stretchMode="columnWidth"
         android:columnWidth="130dp"
         android:horizontalSpacing="10dp"
         android:verticalSpacing="10dp"
-        android:layout_margin="10dp"></GridView>
+        android:layout_margin="10dp"/>
 
     <TextView
         android:id="@+id/label_no_results"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:text="@string/no_results_loaded"
-        style="@style/DetailsFragmentContent"
+        style="@style/DetailsContent"
         android:textSize="15sp"
         android:gravity="center"
         android:layout_gravity="center"/>
