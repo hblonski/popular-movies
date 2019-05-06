@@ -7,7 +7,8 @@ import retrofit2.Retrofit;
 import retrofit2.converter.jackson.JacksonConverterFactory;
 
 /**
- * See https://square.github.io/retrofit/
+ * Generates a service for a Retrofit API Client class.
+ * @see <a href="https://square.github.io/retrofit/">https://square.github.io/retrofit/</a>
  * */
 public abstract class RetrofitServiceGenerator {
 

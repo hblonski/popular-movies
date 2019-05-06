@@ -47,7 +47,9 @@ public class ReviewListAdapter extends RecyclerView.Adapter<ReviewListAdapter.Re
         holder.contentTextView.setText(review.getContent());
         holder.itemView.setOnClickListener(v -> {
             holder.itemView.getRootView();
+            //Animates the transition between open and closed review card
             TransitionManager.beginDelayedTransition(recyclerView);
+            //Opens/closes the review card
             if (!holder.expanded) {
                 holder.contentTextView.setMaxLines(Integer.MAX_VALUE);
                 holder.expanded = true;

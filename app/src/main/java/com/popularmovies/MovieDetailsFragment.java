@@ -88,7 +88,7 @@ public class MovieDetailsFragment extends Fragment {
 
         EventBus eventBus = EventBus.getInstance();
         eventBus.getObservable().subscribe(m -> {
-            if (m.getMovieId() == movie.getId()) {
+            if (m!= null && m.getMovieId() != null && m.getMovieId().equals(movie.getId())) {
                 if (!m.isSuccess()) {
                     handleConnectionFailure();
                 } else {

@@ -54,6 +54,7 @@ public class FavoriteMovieRepository {
             return null;
         }
     }
+
     private static class DeleteAsyncTask extends AsyncTask<FavoriteMovie, Void, Void> {
 
         private final FavoriteMovieDAO favoriteMovieDAO;

@@ -10,10 +10,6 @@ import com.popularmovies.util.FormatUtil;
 import java.text.ParseException;
 import java.util.List;
 
-/**
- * Movie class. Some getters and setters, as well as the empty public constructor, despite being
- * flagged as "never used" by Android Studio, are required by the Jackson Converter.
- * */
 @SuppressWarnings("unused")
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class Movie implements Parcelable {

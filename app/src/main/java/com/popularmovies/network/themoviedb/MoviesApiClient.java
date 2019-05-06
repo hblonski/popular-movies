@@ -11,8 +11,9 @@ import retrofit2.http.Path;
 import retrofit2.http.Query;
 
 /**
- * Used to send requests to The Movie DB API (https://api.themoviedb.org).
- * See https://square.github.io/retrofit/
+ * Used to send requests to The Movie DB API.
+ * @see <a href="https://square.github.io/retrofit/">https://square.github.io/retrofit/</a>
+ * @see <a href="https://api.themoviedb.org">https://api.themoviedb.org</a>
  * */
 public interface MoviesApiClient {
 

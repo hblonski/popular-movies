@@ -36,10 +36,6 @@ public class MainActivity extends AppCompatActivity {
 
     private MovieListSortOrder currentSortOrder;
 
-    private GridView moviesGridView;
-
-    private FavoriteMovieViewModel favoriteMovieViewModel;
-
     private List<FavoriteMovie> favoriteMovies;
 
     @Override
@@ -48,9 +44,9 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
 
         moviesViewModel = ViewModelProviders.of(this).get(MoviesViewModel.class);
-        favoriteMovieViewModel = ViewModelProviders.of(this).get(FavoriteMovieViewModel.class);
+        FavoriteMovieViewModel favoriteMovieViewModel = ViewModelProviders.of(this).get(FavoriteMovieViewModel.class);
 
-        moviesGridView = findViewById(R.id.movies_grid_view);
+        GridView moviesGridView = findViewById(R.id.movies_grid_view);
         final MovieListAdapter movieListAdapter = new MovieListAdapter(this);
         moviesGridView.setAdapter(movieListAdapter);
 

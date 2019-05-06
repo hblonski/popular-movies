@@ -3,6 +3,14 @@ package com.popularmovies.util.bus;
 import io.reactivex.Observable;
 import io.reactivex.subjects.PublishSubject;
 
+/**
+ * Event bus for movie events. This class is used as a channel of communication between non-related
+ * parts of the application.
+ * Publishers can use the @publish method to broadcast events. Observers can subscribe to this events
+ * using the @getObservable method.
+ * This process is implemented using the RxJava library.
+ * @see <a href="https://github.com/ReactiveX/RxJava">https://github.com/ReactiveX/RxJava</a>
+ * */
 public class EventBus {
 
     private static EventBus instance;

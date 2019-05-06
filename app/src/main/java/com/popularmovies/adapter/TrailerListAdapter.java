@@ -51,7 +51,7 @@ public class TrailerListAdapter extends RecyclerView.Adapter<TrailerListAdapter.
     public void onBindViewHolder(@NonNull TrailerViewHolder holder, int position) {
         if (trailerList != null) {
             String trailerKey = trailerList.get(position);
-            YouTubeController.loadMoviePoster(holder.itemView,
+            YouTubeController.loadVideoThumbnail(holder.itemView,
                     holder.thumbnailImageView,
                     trailerKey);
 

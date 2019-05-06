@@ -13,7 +13,7 @@ public abstract class YouTubeController {
 
     public static final String YOUTUBE_APP_URI = "vnd.youtube:";
 
-    public static void loadMoviePoster(View view, final ImageView imageView, String videoKey) {
+    public static void loadVideoThumbnail(View view, final ImageView imageView, String videoKey) {
         GlideHelper.loadImageIntoImageView(view,
                 imageView,
                 String.format(THUMBNAIL_BASE_URL, videoKey),

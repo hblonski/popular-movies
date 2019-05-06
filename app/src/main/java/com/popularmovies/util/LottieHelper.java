@@ -4,6 +4,10 @@ import android.animation.ValueAnimator;
 
 import com.airbnb.lottie.LottieAnimationView;
 
+/**
+ * This class handles Lottie animations.
+ * @see <a href="https://airbnb.design/lottie/">https://airbnb.design/lottie/</a>
+ * */
 public abstract class LottieHelper {
 
     //Default animation duration, in milliseconds

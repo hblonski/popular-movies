@@ -6,10 +6,6 @@ import android.os.Parcelable;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
-/**
- * Video class. Some getters and setters, as well as the empty public constructor, despite being
- * flagged as "never used" by Android Studio, are required by the Jackson Converter.
- * */
 @SuppressWarnings("unused")
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class Video implements Parcelable {

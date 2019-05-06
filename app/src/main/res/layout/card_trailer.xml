@@ -9,13 +9,15 @@
         android:id="@+id/trailer_thumbnail"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:scaleType="centerCrop"/>
+        android:scaleType="centerCrop"
+        android:contentDescription="@string/trailer_thumbnail" />
 
     <ImageView
         android:id="@+id/play_button"
         android:layout_width="80dp"
         android:layout_height="60dp"
         android:layout_gravity="center"
-        android:src="@drawable/ic_play_circle_24dp" />
+        android:src="@drawable/ic_play_circle_24dp"
+        android:contentDescription="@string/play_video" />
 
 </androidx.cardview.widget.CardView>
