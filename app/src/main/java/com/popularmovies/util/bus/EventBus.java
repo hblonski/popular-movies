@@ -17,6 +17,10 @@ public class EventBus {
 
     private static final PublishSubject<MovieEvent> eventBus = PublishSubject.create();
 
+    private EventBus() {
+        //Empty
+    }
+
     public static EventBus getInstance() {
         if (instance == null) {
             instance = new EventBus();

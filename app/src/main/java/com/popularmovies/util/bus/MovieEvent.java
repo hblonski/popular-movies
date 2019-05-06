@@ -1,7 +1,7 @@
 package com.popularmovies.util.bus;
 
 /**
- * Represents an event related to an operation related to a movie.
+ * Represents an event related to an operation involving a movie.
  * Since http calls are made asynchronously, the EventBus instance is used to share information
  * between callbacks and classes that use them, through MovieEvents.
  * See {@link EventBus}.
