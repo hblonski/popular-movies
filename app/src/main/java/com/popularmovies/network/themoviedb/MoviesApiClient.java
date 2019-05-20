@@ -17,9 +17,6 @@ import retrofit2.http.Query;
  * */
 public interface MoviesApiClient {
 
-    //Replace the value with your MovieDB api key
-    String API_KEY = "";
-
     String BASE_URL = "https://api.themoviedb.org/3/";
 
     String BASE_URL_IMAGES = "https://image.tmdb.org/t/p/w780";

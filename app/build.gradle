@@ -14,6 +14,7 @@ android {
                 arguments = ["room.schemaLocation": "$projectDir/schemas".toString()]
             }
         }
+        buildConfigField "String", "THE_MOVIE_DB_KEY", THE_MOVIE_DB_KEY
     }
     buildTypes {
         release {
