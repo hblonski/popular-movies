@@ -28,6 +28,8 @@ import com.popularmovies.util.bus.MovieEvent;
 
 import java.util.List;
 
+import io.reactivex.disposables.Disposable;
+
 public class MainActivity extends AppCompatActivity {
 
     private final static int VISIBLE_THRESHOLD = 6;
@@ -37,6 +39,7 @@ public class MainActivity extends AppCompatActivity {
     private MovieListSortOrder currentSortOrder;
 
     private List<FavoriteMovie> favoriteMovies;
+    private Disposable eventBusSubscription;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -79,15 +82,26 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void subscribeToEventBus() {
-        EventBus.getInstance().getObservable().subscribe(e -> {
+        eventBusSubscription = EventBus.getInstance().getObservable().subscribe(e -> {
             if ((e.getType().equals(MovieEvent.Type.LOADED_MOVIE_LIST)
             || e.getType().equals(MovieEvent.Type.LOADED_MOVIE_DETAILS))
             && !e.isSuccess()) {
                 Toast.makeText(this,
                         R.string.connection_error_the_movie_db,
                         Toast.LENGTH_LONG).show();
+            } else if (e.getType().equals(MovieEvent.Type.DELETED_FAVORITE)
+                    && MovieListSortOrder.FAVORITES.equals(currentSortOrder)) {
+                moviesViewModel.removeMovie(e.getMovieId());
             }
         });
+    }
+
+    @Override
+    protected void onDestroy() {
+        if (eventBusSubscription != null) {
+            eventBusSubscription.dispose();
+        }
+        super.onDestroy();
     }
 
     private void handleNoResultsLoaded(int resultsCount) {

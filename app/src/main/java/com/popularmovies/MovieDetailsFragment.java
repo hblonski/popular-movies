@@ -27,10 +27,13 @@ import com.popularmovies.network.themoviedb.model.Video;
 import com.popularmovies.network.themoviedb.viewmodel.MoviesViewModel;
 import com.popularmovies.util.LottieHelper;
 import com.popularmovies.util.bus.EventBus;
+import com.popularmovies.util.bus.MovieEvent;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
+
+import io.reactivex.disposables.Disposable;
 
 
 public class MovieDetailsFragment extends Fragment {
@@ -53,6 +56,8 @@ public class MovieDetailsFragment extends Fragment {
     private List<String> youTubeVideoKeys = new ArrayList<>();
 
     private List<Review> loadedReviews;
+
+    private Disposable eventBusSubscription;
 
     /**
      * Use this factory method to createFragment a new instance of
@@ -87,7 +92,7 @@ public class MovieDetailsFragment extends Fragment {
         fragmentView = inflater.inflate(R.layout.fragment_movie_details, container, false);
 
         EventBus eventBus = EventBus.getInstance();
-        eventBus.getObservable().subscribe(m -> {
+        eventBusSubscription = eventBus.getObservable().subscribe(m -> {
             if (m!= null && m.getMovieId() != null && m.getMovieId().equals(movie.getId())) {
                 if (!m.isSuccess()) {
                     handleConnectionFailure();
@@ -102,9 +107,17 @@ public class MovieDetailsFragment extends Fragment {
         moviesViewModel.fetchVideos(movie);
         moviesViewModel.fetchReviews(movie);
         setupMovieInfoViews();
-        setupFavoriteButton();
+        setupFavoriteButton(eventBus);
 
         return fragmentView;
+    }
+
+    @Override
+    public void onDestroy() {
+        if (eventBusSubscription != null) {
+            eventBusSubscription.dispose();
+        }
+        super.onDestroy();
     }
 
     private void setupMovieInfoViews() {
@@ -129,7 +142,7 @@ public class MovieDetailsFragment extends Fragment {
         }
     }
 
-    public void setupTrailersRecyclerView() {
+    private void setupTrailersRecyclerView() {
         setupTrailersKeyList();
         RecyclerView trailersRecyclerView = fragmentView.findViewById(R.id.d_trailers_recycler_view);
         TrailerListAdapter trailerListAdapter = new TrailerListAdapter(youTubeVideoKeys);
@@ -146,7 +159,7 @@ public class MovieDetailsFragment extends Fragment {
         }
     }
 
-    public void setupReviewsRecyclerView() {
+    private void setupReviewsRecyclerView() {
         RecyclerView reviewsRecyclerView = fragmentView.findViewById(R.id.d_reviews_recycler_view);
         ReviewListAdapter reviewListAdapter = new ReviewListAdapter();
         reviewsRecyclerView.setAdapter(reviewListAdapter);
@@ -192,7 +205,7 @@ public class MovieDetailsFragment extends Fragment {
                 Toast.LENGTH_LONG).show();
     }
 
-    private void setupFavoriteButton() {
+    private void setupFavoriteButton(EventBus eventBus) {
         final LottieAnimationView animationView = fragmentView.findViewById(R.id.d_favorite_button);
         favoriteMovieViewModel.findByMovieId(movie.getId()).observe(MovieDetailsFragment.this, favoriteMovie -> {
             MovieDetailsFragment.this.favoriteMovie = favoriteMovie;
@@ -208,6 +221,9 @@ public class MovieDetailsFragment extends Fragment {
                 favoriteMovieViewModel.insert(favoriteMovie);
             } else {
                 favoriteMovieViewModel.delete(favoriteMovie);
+                eventBus.publish(new MovieEvent(favoriteMovie.getMovieId(),
+                        MovieEvent.Type.DELETED_FAVORITE,
+                        true));
             }
             LottieHelper.startAnimation(animationView);
         });

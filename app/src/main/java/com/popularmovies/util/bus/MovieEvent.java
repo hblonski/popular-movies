@@ -45,6 +45,7 @@ public class MovieEvent {
         LOADED_VIDEOS,
         LOADED_REVIEWS,
         LOADED_MOVIE_DETAILS,
-        LOADED_MOVIE_LIST
+        LOADED_MOVIE_LIST,
+        DELETED_FAVORITE
     }
 }

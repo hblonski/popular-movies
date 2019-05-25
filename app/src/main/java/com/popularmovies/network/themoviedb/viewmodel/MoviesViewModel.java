@@ -102,8 +102,21 @@ public class MoviesViewModel extends AndroidViewModel {
         //Synchronized so that no value is lost when the asynchronous calls add items
         synchronized (this) {
             moviesList.getValue().add(movie);
-            //Sets the value as itself, just to notify the observers
-            moviesList.setValue(moviesList.getValue());
+            updateMovieList();
         }
+    }
+
+    public void removeMovie(@NonNull Integer movieId) {
+        moviesList.getValue()
+                .stream()
+                .filter(m -> movieId.equals(m.getId()))
+                .findFirst()
+                .ifPresent(movie -> moviesList.getValue().remove(movie));
+        updateMovieList();
+    }
+
+    //Sets the value as itself, just to notify the observers
+    private void updateMovieList() {
+        moviesList.setValue(moviesList.getValue());
     }
 }
