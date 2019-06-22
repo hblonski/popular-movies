@@ -1,4 +1,4 @@
-Popular Movies -- Udacity Android Developer Nanodegree project #2! :)
+# Popular Movies -- Udacity Android Developer Nanodegree project #2! :)
 
 This app fetchs data from The Movie DB (https://www.themoviedb.org) to display a list of movies. The list can be sorted by "Top rated" or "Popular".
 
